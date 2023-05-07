@@ -11,11 +11,25 @@ config_version=5
 [application]
 
 config/name="Salva Pompei Action"
-run/main_scene="res://node_2d.tscn"
+run/main_scene="res://Menu.tscn"
 config/features=PackedStringArray("4.0", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+BaseClasses="*res://InitScripts/BaseProperties.gd"
+MiscInit="*res://InitScripts/MiscInit.gd"
+
+[dotnet]
+
+project/assembly_name="Salva Pompei Action"
+
+[physics]
+
+2d/default_gravity=0.0
 
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+anti_aliasing/quality/screen_space_aa=1
