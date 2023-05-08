@@ -15,6 +15,12 @@ func Gun(bulletwait = 1,damage = 1,speed = 10000 ,maxdistance = 10000,basespread
 }
 			return gun.duplicate()
 				
+func SKey(KEY, functioncheck):
+	var key = {
+		"Value":KEY,
+		"FunctionCheck":functioncheck,
+	}
+	return key
 
 func Creature(target,health = 100,movementforce = [10**4,10**4,10**4,10**4],mass = 100,turnforce =10000,rotationoffset=0,gun = Gun(),projectileoffset = Vector2(50,0),team = "None"):
 		var creature = {
