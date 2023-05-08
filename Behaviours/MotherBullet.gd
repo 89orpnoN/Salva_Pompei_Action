@@ -20,6 +20,7 @@ func OnBulletFired(origin,angle,DMG,Speed,group,range):
 	clone_node.damage = DMG
 	clone_node.range = range
 	clone_node.team = group
+	clone_node.originPosition = origin
 	get_node("..").add_child(clone_node)
 	clone_node.set_global_position(origin)
 	clone_node.set_global_rotation_degrees(angle)

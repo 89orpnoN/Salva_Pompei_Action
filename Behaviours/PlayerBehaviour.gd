@@ -9,21 +9,31 @@ var shootbreak
 var wait_shootbreak
 var creatureObject
 var Gun
-
+var keyidentifier 
 # Called when the node enters the scene tree for the first time.
+
+func Key(KEY, functioncheck = Input.is_key_pressed):
+	var key = {
+		"Value":KEY,
+		"FunctionCheck":functioncheck,
+	}
+	return key
+
 func _ready():
 
 	set_position(Vector2(0,0))
 	set_lock_rotation_enabled(false)
+	
+	
 	ActionKeys = {
-		"forward":[KEY_W,KEY_UP],
-		"backward":[KEY_S,KEY_DOWN],
-		"left":[KEY_A,KEY_LEFT],
-		"right":[KEY_D,KEY_RIGHT],
-		"shoot":[MOUSE_BUTTON_MASK_LEFT,KEY_ALT],
+		"forward":[Key(KEY_W),Key(KEY_UP)],
+		"backward":[Key(KEY_S),Key(KEY_DOWN)],
+		"left":[Key(KEY_A),Key(KEY_LEFT)],
+		"right":[Key(KEY_D),Key(KEY_RIGHT)],
+		"shoot":[Key(MOUSE_BUTTON_LEFT,Input.is_mouse_button_pressed),Key(KEY_ALT)],
 		"CheckAndExecuteKey": func (KeyArr, func_to_apply):
 			for i in KeyArr:
-				if Input.is_key_pressed(i):
+				if i.FunctionCheck.call(i.Value):
 					func_to_apply.call()
 					break
 	}
