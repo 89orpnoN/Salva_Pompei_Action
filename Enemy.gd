@@ -1,6 +1,6 @@
 extends RigidBody2D
 
-var MoveDirections
+var MoveDirections = Vector2()
 var creatureObject
 var Gun 
 var ActionKeys
@@ -9,14 +9,13 @@ var seeker
 var MVMForce
 var path = Array()
 var Navigator
-
+var state  = BaseClasses.SLEEPING
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	seeker = get_closest_node(get_tree().get_nodes_in_group("Players"))
-	set_position(Vector2(100,100))
 	set_lock_rotation_enabled(false)
 	Navigator = get_node("PathMaker")
-	
+	MoveDirections = CreatePath()
 	ActionKeys = {
 		"forward":[Key(10),Key(11)],
 		"backward":[Key(20),Key(21)],
@@ -29,7 +28,7 @@ func _ready():
 					func_to_apply.call()
 					break
 	}
-	
+
 	Gun = BaseClasses.Gun(0.7,0,10000,10000,30,0.05,7)
 	creatureObject = BaseClasses.Creature(self,100,[250000,250000,250000,250000],100,100000,-90,Gun,Vector2(100,0),"Enemies")
 	MVMForce = creatureObject.MovementForce
@@ -39,19 +38,55 @@ func _process(delta):
 	ActionsArr = []
 	if creatureObject.Health <= 0:
 		queue_free()
-	PointToPoint(seeker.global_position,delta)
-	ActionsArr.append(50)
-	
+
+	if state == BaseClasses.CHASING: 
+		chasephase(delta)
+
+	elif state == BaseClasses.SLEEPING:
+		sleepPhase(delta)
+	elif state == BaseClasses.ATTACKING:
+		attackphase(delta)
 	Actions(delta)
 
-func _physics_process(delta):
-	MoveDirections = CreatePath()
+func attackphase(delta):
+	if BaseClasses.isObjectVisible(self,seeker):
+		PointToPoint(seeker.global_position,delta)
+		ActionsArr.append(50)
+	else:
+		state = BaseClasses.CHASING
+
+func chasephase(delta):
+	if BaseClasses.isObjectVisible(self,seeker):
+		var currentpath = Navigator.get_current_navigation_path()
+		
+		if len(currentpath) < 2:
+			MoveDirections = Vector2()
+		else:
+			
+			if global_position.distance_to(currentpath[len(currentpath)-2]) > 5:
+				MoveDirections = ((currentpath[len(currentpath)-2]-global_position).floor() ).normalized()
+				state = BaseClasses.ATTACKING
+				MoveDirections = Vector2()
+				
+	else:
+		MoveDirections = CreatePath()
+			
 	apply_force(MoveDirections*delta*60*MVMForce[0])
-	
+
+func sleepPhase(delta):
+	var space_state = get_world_2d().direct_space_state
+	var query = PhysicsRayQueryParameters2D.create(global_position,seeker.global_position)
+	var result = space_state.intersect_ray(query)
+	if result:
+		if result.collider == seeker:
+			state = BaseClasses.CHASING
+			
+func _physics_process(delta):
+	pass
+		
 func CreatePath():
 	Navigator.set_target_position(seeker.global_position)
 	path = (-global_position+Navigator.get_next_path_position()).normalized()
-	print(path)
 	return path
 
 func Key(KEY, functioncheck = isInActions):
@@ -95,3 +130,5 @@ func get_closest_node(nodes):
 				a = i
 	return a
 	
+
+

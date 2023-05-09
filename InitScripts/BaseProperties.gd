@@ -1,6 +1,10 @@
-extends Node
+extends Node2D
 
 signal shootprojectile(origin,angle,DMG,Speed,group)
+
+enum {
+	SLEEPING,CHASING,ATTACKING,SEARCHING,DEAD
+}
 
 func Gun(bulletwait = 1,damage = 1,speed = 10000 ,maxdistance = 10000,basespread = 5 ,spreadmultiplier = 0.1,bulletamount = 1):
 			var gun = {
@@ -22,8 +26,17 @@ func SKey(KEY, functioncheck):
 	}
 	return key
 
+func isObjectVisible(obj,obj2):
+	var space_state = get_world_2d().direct_space_state
+	var query = PhysicsRayQueryParameters2D.create(obj.global_position,obj2.global_position)
+	var result = space_state.intersect_ray(query)
+	if result.collider == obj2:
+		return true
+	return false
+
 func Creature(target,health = 100,movementforce = [10**4,10**4,10**4,10**4],mass = 100,turnforce =10000,rotationoffset=0,gun = Gun(),projectileoffset = Vector2(50,0),team = "None"):
 		var creature = {
+		"State":0,
 		"Target":target,
 		"Health":health,
 		"MovementForce":movementforce,
