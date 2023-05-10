@@ -13,7 +13,6 @@ func _process(delta):
 
 
 func OnBulletFired(origin,angle,DMG,Speed,group,range):
-	print("sparato")
 	var clone_node = duplicate(0)
 	clone_node.set_script(load("res://Behaviours/ChildBullet.gd"))
 	clone_node.speed = Vector2(Speed,0).rotated(deg_to_rad(angle))

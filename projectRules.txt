@@ -1,0 +1,6 @@
+livelli di rilevamento della fisica.
+1 = muri
+2 = player
+3 = nemici
+4 = istanze fisiche distruttibili(simili a player e nemici)
+8 = frictioncanvasbase

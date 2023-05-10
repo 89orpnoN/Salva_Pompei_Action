@@ -15,9 +15,10 @@ func _process(delta):
 	var dist = Root.get_global_position().distance_to(get_global_mouse_position())*((actualVelocity*Root.creatureObject.Gun.SpreadMultiplier+Root.creatureObject.Gun.BaseSpread)/180)
 	var position = Vector2()
 	
+	
 	if pos[0]:
 		position.y= - dist
-
+		
 	else:
 		position.y=  dist
 		

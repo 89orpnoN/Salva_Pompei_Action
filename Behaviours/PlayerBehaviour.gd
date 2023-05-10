@@ -10,6 +10,8 @@ var wait_shootbreak
 var creatureObject
 var Gun
 var keyidentifier 
+var GunAppearance
+var GunNode
 # Called when the node enters the scene tree for the first time.
 
 func Key(KEY, functioncheck = Input.is_key_pressed):
@@ -39,31 +41,35 @@ func _ready():
 	}
 	MVMForce = [250000,250000,250000,250000]
 	TurnForce = 100000
-	Gun = BaseClasses.Gun(0.7,100,10000,10000,30,0.05,7)
+	GunAppearance = BaseClasses.GunAppearance(load("res://Sprites/Guns/ak47.bmp"),Vector2(1,-21.3333),Vector2(1,1),)
+	GunNode = get_node("PlayerAppearance/Gun")
+	BaseClasses.setGunAppearance(GunNode,GunAppearance)
+	Gun = BaseClasses.Gun(GunNode,0.08,12,10000,10000,10,0.15,30,false,1,1)
 	creatureObject = BaseClasses.Creature(self,100,MVMForce,100,TurnForce,-90,Gun,Vector2(100,0),"Player")
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	MovementActions(delta)
-	PointToMouse(delta)
-	ActionKeys.CheckAndExecuteKey.call(ActionKeys.shoot,ShootTry)
-	Gun.BulletDelta += delta
+	if creatureObject.Health <= 0:
+		queue_free()
+	Actions(delta)
 	
-func MovementActions(delta):
+func Actions(delta):
 	MoveDirections = Vector2(0,0)
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.forward,func (): MoveDirections.y += -1*MVMForce[0])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.backward,func (): MoveDirections.y += 1*MVMForce[1])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.right,func (): MoveDirections.x += 1*MVMForce[2])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.left,func (): MoveDirections.x += -1*MVMForce[3])
 	apply_force(MoveDirections*delta*60)
+	PointToPoint( get_global_mouse_position(),delta)
+	ActionKeys.CheckAndExecuteKey.call(ActionKeys.shoot,ShootTry)
+	Gun.BulletDelta += delta
 	
 func ShootTry():
 	BaseClasses.ShootProjectile(creatureObject,Gun)
 
-func PointToMouse(delta):
-	mouse_pos = get_global_mouse_position()
-	var look_dir = mouse_pos - global_position
+func PointToPoint(pos,delta):
+	var look_dir = pos - global_position
 	look_dir = look_dir.normalized()
 	var angle = atan2(look_dir.y, look_dir.x) - rotation + deg_to_rad(90)
 	angle = wrap(angle,-PI,PI)

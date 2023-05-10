@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://bmiow21fpjd0"]
+[gd_scene load_steps=26 format=3 uid="uid://bmiow21fpjd0"]
 
 [ext_resource type="Texture2D" uid="uid://1vdf3v0kc8k7" path="res://icon.svg" id="1_2j8v0"]
 [ext_resource type="Script" path="res://Behaviours/PlayerBehaviour.gd" id="1_6kk2a"]
@@ -10,7 +10,7 @@
 [ext_resource type="Script" path="res://Behaviours/CenterSights.gd" id="7_en6jb"]
 [ext_resource type="Script" path="res://Behaviours/DynamicSights.gd" id="8_in1q8"]
 [ext_resource type="Script" path="res://Behaviours/MotherBullet.gd" id="8_yp5dv"]
-[ext_resource type="Script" path="res://Enemy.gd" id="11_t37yw"]
+[ext_resource type="Script" path="res://MotherEnemy.gd" id="11_v1wly"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ab2cp"]
 bounce = 0.44
@@ -51,6 +51,12 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7kh2"]
+size = Vector2(1e+06, 1e+06)
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_synd0"]
+vertices = PackedVector2Array(634, -183, 641, -384, 13456, -7579, 13349, 9934, 628, 322, 627, 127, -15847, -7579, -637, -380, -15761, 10062, -649, 323, -639, -185, -639, 129)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4, 5), PackedInt32Array(6, 2, 1, 7), PackedInt32Array(4, 3, 8, 9), PackedInt32Array(9, 8, 6, 7, 10), PackedInt32Array(11, 9, 10), PackedInt32Array(10, 0, 5, 11)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-15847, -7579, 13456, -7579, 13349, 9934, -15761, 10062), PackedVector2Array(641, -384, 634, -183, -639, -185, -637, -380), PackedVector2Array(-639, 129, -649, 323, 628, 322, 627, 127)])
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xkdnr"]
 size = Vector2(16, 16)
@@ -78,7 +84,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Node2D" type="Node2D"]
+[node name="World" type="Node2D" groups=["GodNode"]]
 position = Vector2(0, 4)
 
 [node name="box" type="RigidBody2D" parent="." groups=["MapPhisicsOstacles"]]
@@ -100,6 +106,7 @@ position = Vector2(3, -278)
 collision_layer = 2
 collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_lbc0a")
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="wall2"]
 shape = SubResource("RectangleShape2D_suw1q")
@@ -112,6 +119,7 @@ texture = ExtResource("1_2j8v0")
 position = Vector2(-3, 231)
 collision_layer = 2
 physics_material_override = SubResource("PhysicsMaterial_pdoj0")
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="wall"]
 shape = SubResource("RectangleShape2D_suw1q")
@@ -121,7 +129,7 @@ scale = Vector2(9.00391, 0.609375)
 texture = ExtResource("1_2j8v0")
 
 [node name="Player" type="RigidBody2D" parent="." groups=["Players"]]
-position = Vector2(20, 0)
+position = Vector2(-343, -29)
 collision_mask = 3
 mass = 100.0
 inertia = 10.0
@@ -134,57 +142,71 @@ script = ExtResource("1_6kk2a")
 position = Vector2(-14, -69)
 texture = ExtResource("6_65n15")
 script = ExtResource("7_en6jb")
+metadata/_edit_lock_ = true
 
 [node name="1" type="Sprite2D" parent="Player/CenterSight"]
 texture = ExtResource("6_ygttj")
 script = ExtResource("8_in1q8")
+metadata/_edit_lock_ = true
 
 [node name="2" type="Sprite2D" parent="Player/CenterSight"]
 texture = ExtResource("6_ygttj")
 script = ExtResource("8_in1q8")
 metadata/Pos = [true, true]
+metadata/_edit_lock_ = true
 
 [node name="3" type="Sprite2D" parent="Player/CenterSight"]
 texture = ExtResource("6_ygttj")
 script = ExtResource("8_in1q8")
 metadata/Pos = [true, true]
+metadata/_edit_lock_ = true
 
 [node name="4" type="Sprite2D" parent="Player/CenterSight"]
 texture = ExtResource("6_ygttj")
 script = ExtResource("8_in1q8")
 metadata/Pos = [true, true]
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource("CircleShape2D_tkp2k")
+metadata/_edit_lock_ = true
 
-[node name="PlayerAppearance" type="AnimatedSprite2D" parent="Player/CollisionShape2D"]
+[node name="PlayerAppearance" type="AnimatedSprite2D" parent="Player"]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_nsy7p")
 animation = &"Idle"
 offset = Vector2(-0.5, -4)
+metadata/_edit_lock_ = true
 
-[node name="Gun" type="Sprite2D" parent="Player/CollisionShape2D/PlayerAppearance"]
+[node name="Gun" type="Sprite2D" parent="Player/PlayerAppearance"]
 position = Vector2(1, -21.3333)
 texture = ExtResource("4_syh0q")
+metadata/_edit_lock_ = true
 
-[node name="MainCamera" type="Camera2D" parent="Player/CollisionShape2D/PlayerAppearance"]
+[node name="MainCamera" type="Camera2D" parent="Player/PlayerAppearance"]
 process_callback = 0
 position_smoothing_enabled = true
 position_smoothing_speed = 15.0
+metadata/_edit_lock_ = true
 
 [node name="FrictionCanvas" type="Area2D" parent="."]
 visible = false
 position = Vector2(-1, -91)
-collision_layer = 255
+collision_layer = 128
 collision_mask = 255
 linear_damp_space_override = 1
 linear_damp = 7.619
 angular_damp_space_override = 1
 angular_damp = 12.422
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FrictionCanvas"]
-scale = Vector2(1e+06, 1e+06)
+visible = false
 shape = SubResource("RectangleShape2D_j7kh2")
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="FrictionCanvas"]
+position = Vector2(7, 94)
+navigation_polygon = SubResource("NavigationPolygon_synd0")
 
 [node name="MotherBullet" type="RigidBody2D" parent="."]
 position = Vector2(-100000, -100000)
@@ -192,6 +214,7 @@ collision_layer = 0
 collision_mask = 7
 freeze = true
 script = ExtResource("8_yp5dv")
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MotherBullet"]
 shape = SubResource("RectangleShape2D_xkdnr")
@@ -201,21 +224,32 @@ scale = Vector2(0.132813, 0.132813)
 texture = ExtResource("1_2j8v0")
 
 [node name="MotherEnemy" type="RigidBody2D" parent="."]
-position = Vector2(-119, -15)
+position = Vector2(5, 444)
 collision_mask = 3
 mass = 100.0
 inertia = 10.0
-script = ExtResource("11_t37yw")
+script = ExtResource("11_v1wly")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MotherEnemy"]
 shape = SubResource("CircleShape2D_wc2k0")
+metadata/_edit_lock_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="MotherEnemy/CollisionShape2D"]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_xinn3")
 animation = &"Idle"
 offset = Vector2(0.4, -3.2)
+metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="MotherEnemy/CollisionShape2D/AnimatedSprite2D"]
 position = Vector2(0.666668, -19.6667)
 texture = ExtResource("4_syh0q")
+
+[node name="PathMaker" type="NavigationAgent2D" parent="MotherEnemy"]
+path_desired_distance = 105.71
+path_max_distance = 300.0
+avoidance_enabled = true
+radius = 257.57
+debug_enabled = true
+
+[connection signal="velocity_computed" from="MotherEnemy/PathMaker" to="MotherEnemy" method="_on_path_maker_velocity_computed"]

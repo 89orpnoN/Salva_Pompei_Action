@@ -15,32 +15,23 @@ func _ready():
 	set_rotation_degrees(rotation)
 
 
-func body_entered(body):
-	print("collisone con proiettile")
-	if not body.is_in_group(team):
-		print("non è del team")
-		if not body.creatureObject == null:
-			print("salute sottratta")
-			body.creatureObject.Health -= damage
-
 func _process(delta):
 	var body
 	var collision = move_and_collide(speed * delta)
 	if collision:
 		body = collision.get_collider()
-		print("collisone con proiettile")
 		var a = get_groups()
-		if body.creatureObject.Team == team:
-			print("è del team")
-			
+		if not "creatureObject" in body:
+			queue_free()
 		else:
-			if "creatureObject" in body:
-				print("salute sottratta")
+			if not team == body.creatureObject.Team:
 				body.creatureObject.Health -= damage
 				queue_free()
+			else:
+				translate(speed * delta)
+			
 	var deltaPosition = get_global_position()-originPosition
 	if deltaPosition.y**2+deltaPosition.x**2 > range**2:
-		print("bro eliminati22")
 		queue_free()
 
 		
