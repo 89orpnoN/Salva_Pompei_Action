@@ -1,16 +1,20 @@
 extends RigidBody2D
 
-var MoveDirections = Vector2()
+#variabili da dare allo script
 var creatureObject
-var Gun 
-var ActionKeys
-var ActionsArr
+
+
+#queste variabili se le setta da solo
 var seeker
+var ActionsArr
+var ActionKeys
 var MVMForce
-var path = Array()
 var Navigator
+var path = Array()
+var MoveDirections = Vector2()
 var state  = BaseClasses.SLEEPING
-# Called when the node enters the scene tree for the first time.
+
+
 func _ready():
 	seeker = get_closest_node(get_tree().get_nodes_in_group("Players"))
 	set_lock_rotation_enabled(false)
@@ -22,15 +26,13 @@ func _ready():
 		"left":[Key(30),Key(31)],
 		"right":[Key(40),Key(41)],
 		"shoot":[Key(50),Key(51)],
+		"reload":[Key(60)],
 		"CheckAndExecuteKey": func (KeyArr, func_to_apply):
 			for i in KeyArr:
 				if i.FunctionCheck.call(i.Value):
 					func_to_apply.call()
 					break
 	}
-
-	Gun = BaseClasses.Gun(0.7,0,10000,10000,30,0.05,7)
-	creatureObject = BaseClasses.Creature(self,100,[250000,250000,250000,250000],100,100000,-90,Gun,Vector2(100,0),"Enemies")
 	MVMForce = creatureObject.MovementForce
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -49,26 +51,34 @@ func _process(delta):
 	Actions(delta)
 
 func attackphase(delta):
-	if BaseClasses.isObjectVisible(self,seeker):
+	if BaseClasses.isObjectVisible(self,seeker) and BaseClasses.inRange(creatureObject,seeker.global_position):
 		PointToPoint(seeker.global_position,delta)
 		ActionsArr.append(50)
 	else:
 		state = BaseClasses.CHASING
+		
+
+
 
 func chasephase(delta):
 	if BaseClasses.isObjectVisible(self,seeker):
 		var currentpath = Navigator.get_current_navigation_path()
-		
-		if len(currentpath) < 2:
+		var lenght = len(currentpath)
+		if len(currentpath) <= 1:
 			MoveDirections = Vector2()
 		else:
-			
-			if global_position.distance_to(currentpath[len(currentpath)-2]) > 5:
-				MoveDirections = ((currentpath[len(currentpath)-2]-global_position).floor() ).normalized()
-				state = BaseClasses.ATTACKING
-				MoveDirections = Vector2()
-				
+			var optimalPoint = currentpath[lenght-2]
+			if BaseClasses.inRange(creatureObject,seeker.global_position):
+				if global_position.distance_to(optimalPoint) > 5:
+					MoveDirections = ((optimalPoint-global_position).floor() ).normalized()
+					attackphase(delta)
+					state = BaseClasses.ATTACKING
+					MoveDirections = Vector2()
+			else:
+				MoveDirections = CreatePath()
+				PointToPoint(MoveDirections+global_position ,delta)
 	else:
+		PointToPoint(MoveDirections+global_position ,delta)
 		MoveDirections = CreatePath()
 			
 	apply_force(MoveDirections*delta*60*MVMForce[0])
@@ -109,13 +119,15 @@ func Actions(delta):
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.backward,func (): MoveDirections.y += 1*MVMForce[1])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.right,func (): MoveDirections.x += 1*MVMForce[2])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.left,func (): MoveDirections.x += -1*MVMForce[3])
-	PointToPoint(seeker.global_position ,delta)
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.shoot,ShootTry)
-	Gun.BulletDelta += delta
+
 
 func ShootTry():
-	BaseClasses.ShootProjectile(creatureObject,Gun)
+	BaseClasses.ShootProjectile(creatureObject)
 
+func ReloadTry():
+	BaseClasses.Reload(creatureObject.Gun)
+	
 func get_closest_node(nodes):
 	var min = null
 	var a 

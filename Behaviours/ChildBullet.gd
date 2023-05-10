@@ -14,8 +14,7 @@ func _init():
 func _ready():
 	set_rotation_degrees(rotation)
 
-
-func _process(delta):
+func _physics_process(delta):
 	var body
 	var collision = move_and_collide(speed * delta)
 	if collision:
@@ -30,8 +29,8 @@ func _process(delta):
 			else:
 				translate(speed * delta)
 			
-	var deltaPosition = get_global_position()-originPosition
-	if deltaPosition.y**2+deltaPosition.x**2 > range**2:
+	if global_position.distance_to(originPosition) > range:
 		queue_free()
 
-		
+func _process(delta):
+	pass

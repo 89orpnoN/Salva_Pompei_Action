@@ -10,6 +10,8 @@ var wait_shootbreak
 var creatureObject
 var Gun
 var keyidentifier 
+var GunAppearance
+var GunNode
 # Called when the node enters the scene tree for the first time.
 
 func Key(KEY, functioncheck = Input.is_key_pressed):
@@ -30,6 +32,7 @@ func _ready():
 		"backward":[Key(KEY_S),Key(KEY_DOWN)],
 		"left":[Key(KEY_A),Key(KEY_LEFT)],
 		"right":[Key(KEY_D),Key(KEY_RIGHT)],
+		"reload":[Key(KEY_R)],
 		"shoot":[Key(MOUSE_BUTTON_LEFT,Input.is_mouse_button_pressed),Key(KEY_ALT)],
 		"CheckAndExecuteKey": func (KeyArr, func_to_apply):
 			for i in KeyArr:
@@ -39,16 +42,23 @@ func _ready():
 	}
 	MVMForce = [250000,250000,250000,250000]
 	TurnForce = 100000
-	Gun = BaseClasses.Gun(0.08,12,10000,10000,10,0.15,1)
-	creatureObject = BaseClasses.Creature(self,100,MVMForce,100,TurnForce,-90,Gun,Vector2(100,0),"Player")
+	Gun = BaseItems.Weapons["ak-47"]
+	GunAppearance = Gun.gunAppearance
+	GunNode = get_node("PlayerAppearance/Gun")
+	BaseClasses.setGunAppearance(GunNode,GunAppearance)
+	creatureObject = BaseClasses.Creature(self,10000,MVMForce,100,TurnForce,-90,Gun,Vector2(100,0),"Player")
 	
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if len(get_tree().get_nodes_in_group("Enemies"))>0:
+		print(global_position.distance_to(get_tree().get_nodes_in_group("Enemies")[0].global_position))
 	if creatureObject.Health <= 0:
 		queue_free()
+		print("dead")
 	Actions(delta)
-	
+
 func Actions(delta):
 	MoveDirections = Vector2(0,0)
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.forward,func (): MoveDirections.y += -1*MVMForce[0])
@@ -58,10 +68,13 @@ func Actions(delta):
 	apply_force(MoveDirections*delta*60)
 	PointToPoint( get_global_mouse_position(),delta)
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.shoot,ShootTry)
-	Gun.BulletDelta += delta
+	ActionKeys.CheckAndExecuteKey.call(ActionKeys.reload,ReloadTry)
 	
 func ShootTry():
-	BaseClasses.ShootProjectile(creatureObject,Gun)
+	BaseClasses.ShootProjectile(creatureObject)
+
+func ReloadTry():
+	BaseClasses.reloadGun(Gun)
 
 func PointToPoint(pos,delta):
 	var look_dir = pos - global_position
