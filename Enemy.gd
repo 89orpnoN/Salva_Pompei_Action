@@ -32,6 +32,7 @@ func _ready():
 					func_to_apply.call()
 					break
 	}
+	BaseClasses.EquipGun(creatureObject,creatureObject.Gun,self,get_node("EnemyAppearance/Gun"))
 	MVMForce = creatureObject.MovementForce
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

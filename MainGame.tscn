@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://d1k4oryfdvy6u"]
+[gd_scene load_steps=28 format=3 uid="uid://d1k4oryfdvy6u"]
 
 [ext_resource type="Texture2D" uid="uid://1vdf3v0kc8k7" path="res://icon.svg" id="1_2j8v0"]
 [ext_resource type="Script" path="res://Behaviours/PlayerBehaviour.gd" id="1_6kk2a"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://Behaviours/DynamicSights.gd" id="8_in1q8"]
 [ext_resource type="Script" path="res://Behaviours/MotherBullet.gd" id="8_yp5dv"]
 [ext_resource type="NavigationPolygon" uid="uid://dtmr0fbx00ip3" path="res://MainGame.tres" id="10_gq7mo"]
+[ext_resource type="Texture2D" uid="uid://bsnvkbsc5lsa" path="res://Sprites/Player/Mercenary.bmp" id="12_rmy84"]
 [ext_resource type="Script" path="res://Behaviours/MotherEnemy.gd" id="12_suwb8"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ab2cp"]
@@ -57,18 +58,30 @@ size = Vector2(16, 16)
 [sub_resource type="CircleShape2D" id="CircleShape2D_wc2k0"]
 radius = 38.0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_8yaj0"]
-atlas = ExtResource("3_34emg")
-region = Rect2(0, 32, 31, 32)
+[sub_resource type="AtlasTexture" id="AtlasTexture_fkgjc"]
+atlas = ExtResource("12_rmy84")
+region = Rect2(32, 0, 30, 31)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_64q2p"]
+atlas = ExtResource("12_rmy84")
+region = Rect2(1, 0, 30, 31)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_xinn3"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_8yaj0")
+"texture": SubResource("AtlasTexture_fkgjc")
 }],
 "loop": true,
 "name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_64q2p")
+}],
+"loop": true,
+"name": &"Reloading",
 "speed": 5.0
 }, {
 "frames": [],
@@ -228,16 +241,13 @@ debug_enabled = true
 [node name="EnemyAppearance" type="AnimatedSprite2D" parent="MotherEnemy"]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_xinn3")
-animation = &"Idle"
+animation = &"Reloading"
 offset = Vector2(0.4, -3.2)
 metadata/_edit_lock_ = true
 
 [node name="Gun" type="Sprite2D" parent="MotherEnemy/EnemyAppearance"]
 position = Vector2(0.666668, -19.6667)
 texture = ExtResource("4_syh0q")
-
-[node name="SfxPlayer" type="AudioStreamPlayer2D" parent="MotherEnemy"]
-position = Vector2(100343, 1e+07)
 
 [node name="FrictionCanvas" type="Area2D" parent="."]
 visible = false

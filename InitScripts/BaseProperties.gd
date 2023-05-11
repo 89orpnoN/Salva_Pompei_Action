@@ -14,7 +14,7 @@ func GunAppearance(Sprite = null, Offset = Vector2(0,0), Scale = Vector2(1,1),au
 		"ShootSFX":shootsfx,
 		"DrawSFX":pulloutsfx,
 		"ReloadSFX":reloadsfx,
-		"cockSFX":cockSFX,
+		"CockSFX":cockSFX,
 	}
 	return gunAppearance.duplicate()
 
@@ -73,6 +73,7 @@ func Creature(target,health = 100,movementforce = [10**4,10**4,10**4,10**4],mass
 		"Team":team,
 }
 		return creature.duplicate()
+		
 func setGunAppearance(GunNode, Gunappearance):
 	GunNode.texture = Gunappearance.Sprite
 	GunNode.position = Gunappearance.Offset
@@ -104,7 +105,12 @@ func ShootProjectile(creature):
 					var randomspread = BulletSpread(creature)
 					shootprojectile.emit(rotatedOrigin,actual_rotation+randomspread,gun.Damage,gun.Speed,creature.Team,gun.Range)
 				gun.BulletsRemaining-= 1
-				await sleep(gun.BulletWait)
+				var cockwait = 0
+				if creature.Gun.SingleShotReload:
+					cockwait = 0.4
+					await sleep(cockwait)
+					PlaySound(creature.Gun.GunNode,creature.Gun.gunAppearance.CockSFX)
+				await sleep(gun.BulletWait-cockwait)
 				gun.CanFire = true
 			else:
 				reloadGun(gun)
@@ -121,8 +127,8 @@ func PlaySound(node,sound):
 		audio_player.stream = sound
 		node.add_child(audio_player)
 		audio_player.play(0)
-		await sleep(10)
 		audio_player.connect("finished",audio_player.queue_free)
+		await sleep(10)
 	else:
 		print("sound: " + str(sound) + " is null")
 

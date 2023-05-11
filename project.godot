@@ -21,6 +21,11 @@ BaseClasses="*res://InitScripts/BaseProperties.gd"
 MiscInit="*res://InitScripts/MiscInit.gd"
 BaseItems="*res://InitScripts/BaseItems.gd"
 
+[display]
+
+window/size/resizable=false
+window/vsync/vsync_mode=0
+
 [dotnet]
 
 project/assembly_name="Salva Pompei Action"
@@ -31,6 +36,7 @@ project/assembly_name="Salva Pompei Action"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 anti_aliasing/quality/screen_space_aa=1

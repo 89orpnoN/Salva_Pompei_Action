@@ -37,8 +37,6 @@ func _ready():
 	Intendedplayarea = CollisionShape.scale*CollisionShape.shape.size/2
 	
 	var polygon = NavigationPolygon.new()
-	
-	var polygon = NavigationPolygon.new()
 	var outline = PackedVector2Array([Vector2(-Intendedplayarea.x, -Intendedplayarea.y), Vector2(-Intendedplayarea.x, Intendedplayarea.y), Vector2(Intendedplayarea.x, Intendedplayarea.y), Vector2(Intendedplayarea.x, -Intendedplayarea.y)])
 	polygon.add_outline(outline)
 	polygon.make_polygons_from_outlines()

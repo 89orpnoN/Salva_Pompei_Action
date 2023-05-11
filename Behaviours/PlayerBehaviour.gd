@@ -40,7 +40,7 @@ func _ready():
 					func_to_apply.call()
 					break
 	}
-	Gun = BaseItems.Weapons["ak-47"]
+	Gun = BaseItems.Weapons["ak-47"].duplicate()
 	creatureObject = BaseClasses.Creature(null,10000,[250000,250000,250000,250000],100,100000,-90,Gun,Vector2(100,0),"Player")
 	
 	BaseClasses.EquipGun(creatureObject,Gun,self,get_node("PlayerAppearance/Gun"))
