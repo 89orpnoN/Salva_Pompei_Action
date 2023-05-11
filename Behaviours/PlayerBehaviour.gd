@@ -40,15 +40,14 @@ func _ready():
 					func_to_apply.call()
 					break
 	}
-	MVMForce = [250000,250000,250000,250000]
-	TurnForce = 100000
 	Gun = BaseItems.Weapons["ak-47"]
-	GunAppearance = Gun.gunAppearance
-	GunNode = get_node("PlayerAppearance/Gun")
-	BaseClasses.setGunAppearance(GunNode,GunAppearance)
-	creatureObject = BaseClasses.Creature(self,10000,MVMForce,100,TurnForce,-90,Gun,Vector2(100,0),"Player")
+	creatureObject = BaseClasses.Creature(null,10000,[250000,250000,250000,250000],100,100000,-90,Gun,Vector2(100,0),"Player")
 	
-
+	BaseClasses.EquipGun(creatureObject,Gun,self,get_node("PlayerAppearance/Gun"))
+	
+	MVMForce = creatureObject.MovementForce
+	TurnForce = creatureObject.TurnForce
+	GunAppearance = Gun.gunAppearance
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

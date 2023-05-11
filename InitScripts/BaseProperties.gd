@@ -6,7 +6,7 @@ enum {
 	SLEEPING,CHASING,ATTACKING,SEARCHING,DEAD
 }
 
-func GunAppearance(Sprite = null, Offset = Vector2(0,0), Scale = Vector2(1,1), shootsfx = null, cockSFX = null,pulloutsfx = null, reloadsfx = null ):
+func GunAppearance(Sprite = null, Offset = Vector2(0,0), Scale = Vector2(1,1),audionode= null, shootsfx = null, cockSFX = null,pulloutsfx = null, reloadsfx = null ):
 	var gunAppearance = {
 		"Sprite":Sprite,
 		"Offset":Offset,
@@ -46,6 +46,11 @@ func SKey(KEY, functioncheck):
 	}
 	return key
 
+func CreatureLink(Creature,target,gunnode):
+	Creature.Target = target
+	Creature.Gun.GunNode = gunnode
+	setGunAppearance(gunnode,Creature.Gun.gunAppearance)
+
 func isObjectVisible(obj,obj2):
 	var space_state = get_world_2d().direct_space_state
 	var query = PhysicsRayQueryParameters2D.create(obj.global_position,obj2.global_position)
@@ -73,6 +78,12 @@ func setGunAppearance(GunNode, Gunappearance):
 	GunNode.position = Gunappearance.Offset
 	GunNode.scale = Gunappearance.Scale
 	
+func EquipGun(creature,gun,target,gunnode):
+	creature.Gun = gun
+	CreatureLink(creature,target,gunnode)
+	setGunAppearance(creature.Gun.GunNode, creature.Gun.gunAppearance)
+	PlaySound(creature.Target,creature.Gun.gunAppearance.DrawSFX)
+	
 func BulletSpread(creature):
 	var gun = creature.Gun
 	var velocity = creature.Target.get_linear_velocity()
@@ -88,6 +99,7 @@ func ShootProjectile(creature):
 				gun.CanFire = false
 				var actual_rotation = creature.Target.global_rotation_degrees+creature.RotationOffset
 				var rotatedOrigin = creature.Target.get_global_position() +(creature.ProjectileOffset.rotated(deg_to_rad(actual_rotation)))
+				PlaySound(creature.Gun.GunNode,creature.Gun.gunAppearance.ShootSFX)
 				for i in range(gun.BulletAmount):
 					var randomspread = BulletSpread(creature)
 					shootprojectile.emit(rotatedOrigin,actual_rotation+randomspread,gun.Damage,gun.Speed,creature.Team,gun.Range)
@@ -98,10 +110,22 @@ func ShootProjectile(creature):
 				reloadGun(gun)
 		else:
 			gun.InterruptReload = true
+			
 func sleep(t):
 	await get_tree().create_timer(t).timeout
 
-	
+
+func PlaySound(node,sound):
+	if sound != null:
+		var audio_player = AudioStreamPlayer2D.new()
+		audio_player.stream = sound
+		node.add_child(audio_player)
+		audio_player.play(0)
+		await sleep(10)
+		audio_player.connect("finished",audio_player.queue_free)
+	else:
+		print("sound: " + str(sound) + " is null")
+
 func inRange(creature, point2):
 	var actual_rotation = creature.Target.global_rotation_degrees+creature.RotationOffset
 	var rotatedOrigin = creature.Target.get_global_position() +(creature.ProjectileOffset.rotated(deg_to_rad(actual_rotation)))
@@ -111,8 +135,9 @@ func inRange(creature, point2):
 		return true
 
 func reloadGun(gun):
-	if not gun.IsReloading:
+	if not gun.IsReloading and gun.BulletsRemaining<gun.Magazine:
 		gun.IsReloading = true
+		PlaySound(gun.GunNode,gun.gunAppearance.ReloadSFX)
 		if gun.SingleShotReload:
 			print(gun.BulletsRemaining)
 			while not gun.InterruptReload and gun.BulletsRemaining<gun.Magazine:

@@ -12,7 +12,6 @@ var MVMForce
 var Navigator
 var path = Array()
 var MoveDirections = Vector2()
-var state  = BaseClasses.SLEEPING
 
 
 func _ready():
@@ -41,12 +40,12 @@ func _process(delta):
 	if creatureObject.Health <= 0:
 		queue_free()
 
-	if state == BaseClasses.CHASING: 
+	if creatureObject.State == BaseClasses.CHASING: 
 		chasephase(delta)
 
-	elif state == BaseClasses.SLEEPING:
+	elif creatureObject.State == BaseClasses.SLEEPING:
 		sleepPhase(delta)
-	elif state == BaseClasses.ATTACKING:
+	elif creatureObject.State == BaseClasses.ATTACKING:
 		attackphase(delta)
 	Actions(delta)
 
@@ -55,7 +54,7 @@ func attackphase(delta):
 		PointToPoint(seeker.global_position,delta)
 		ActionsArr.append(50)
 	else:
-		state = BaseClasses.CHASING
+		creatureObject.State = BaseClasses.CHASING
 		
 
 
@@ -65,14 +64,14 @@ func chasephase(delta):
 		var currentpath = Navigator.get_current_navigation_path()
 		var lenght = len(currentpath)
 		if len(currentpath) <= 1:
-			MoveDirections = Vector2()
+			MoveDirections = CreatePath()
 		else:
 			var optimalPoint = currentpath[lenght-2]
 			if BaseClasses.inRange(creatureObject,seeker.global_position):
 				if global_position.distance_to(optimalPoint) > 5:
 					MoveDirections = ((optimalPoint-global_position).floor() ).normalized()
 					attackphase(delta)
-					state = BaseClasses.ATTACKING
+					creatureObject.State = BaseClasses.ATTACKING
 					MoveDirections = Vector2()
 			else:
 				MoveDirections = CreatePath()
@@ -89,7 +88,7 @@ func sleepPhase(delta):
 	var result = space_state.intersect_ray(query)
 	if result:
 		if result.collider == seeker:
-			state = BaseClasses.CHASING
+			creatureObject.State = BaseClasses.CHASING
 			
 func _physics_process(delta):
 	pass

@@ -236,6 +236,9 @@ metadata/_edit_lock_ = true
 position = Vector2(0.666668, -19.6667)
 texture = ExtResource("4_syh0q")
 
+[node name="SfxPlayer" type="AudioStreamPlayer2D" parent="MotherEnemy"]
+position = Vector2(100343, 1e+07)
+
 [node name="FrictionCanvas" type="Area2D" parent="."]
 visible = false
 position = Vector2(-1, -91)
