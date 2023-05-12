@@ -6,9 +6,12 @@ enum {
 	SLEEPING,CHASING,ATTACKING,SEARCHING,DEAD
 }
 
-func GunAppearance(Sprite = null, Offset = Vector2(0,0), Scale = Vector2(1,1),audionode= null, shootsfx = null, cockSFX = null,pulloutsfx = null, reloadsfx = null ):
+func GunAppearance(Sprite = null,DropSprite = null, BuySprite=null,KillSprite=null, Offset = Vector2(0,0), Scale = Vector2(1,1), shootsfx = null, cockSFX = null,pulloutsfx = null, reloadsfx = null ):
 	var gunAppearance = {
 		"Sprite":Sprite,
+		"DropSprite":DropSprite,
+		"BuySprite":BuySprite,
+		"KillSprite":KillSprite,
 		"Offset":Offset,
 		"Scale":Scale,
 		"ShootSFX":shootsfx,
@@ -143,20 +146,24 @@ func inRange(creature, point2):
 func reloadGun(gun):
 	if not gun.IsReloading and gun.BulletsRemaining<gun.Magazine:
 		gun.IsReloading = true
-		PlaySound(gun.GunNode,gun.gunAppearance.ReloadSFX)
 		if gun.SingleShotReload:
 			print(gun.BulletsRemaining)
 			while not gun.InterruptReload and gun.BulletsRemaining<gun.Magazine:
+				print(gun.InterruptReload)
+				PlaySound(gun.GunNode,gun.gunAppearance.ReloadSFX)
 				await sleep(gun.ReloadWait/gun.Magazine)
-				gun.BulletsRemaining += 1
-				print(gun.BulletsRemaining)
-			gun.InterruptReload = false
+				if not gun.InterruptReload or gun.BulletsRemaining==0:
+					gun.BulletsRemaining += 1
+					print(gun.BulletsRemaining)
+				
 		else:
+			PlaySound(gun.GunNode,gun.gunAppearance.ReloadSFX)
 			print(gun.BulletsRemaining)
 			await sleep(gun.ReloadWait)
 			gun.BulletsRemaining = gun.Magazine
 			print(gun.BulletsRemaining)
 		gun.IsReloading = false
+		gun.InterruptReload = false
 
 func SpawnEnemy(origin,creature,script,scriptToExec = null):
 	spawnEnemy.emit(origin,creature,script,scriptToExec)

@@ -40,8 +40,8 @@ func _ready():
 					func_to_apply.call()
 					break
 	}
-	Gun = BaseItems.Weapons["ak-47"].duplicate()
-	creatureObject = BaseClasses.Creature(null,10000,[250000,250000,250000,250000],100,100000,-90,Gun,Vector2(100,0),"Player")
+	Gun = BaseItems.getWeapon("Itaca")
+	creatureObject = BaseClasses.Creature(null,100,[250000,250000,250000,250000],100,100000,-90,Gun,Vector2(100,0),"Player")
 	
 	BaseClasses.EquipGun(creatureObject,Gun,self,get_node("PlayerAppearance/Gun"))
 	
@@ -51,8 +51,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if len(get_tree().get_nodes_in_group("Enemies"))>0:
-		print(global_position.distance_to(get_tree().get_nodes_in_group("Enemies")[0].global_position))
 	if creatureObject.Health <= 0:
 		queue_free()
 		print("dead")
