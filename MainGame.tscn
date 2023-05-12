@@ -1,10 +1,9 @@
-[gd_scene load_steps=28 format=3 uid="uid://d1k4oryfdvy6u"]
+[gd_scene load_steps=27 format=3 uid="uid://d1k4oryfdvy6u"]
 
 [ext_resource type="Texture2D" uid="uid://1vdf3v0kc8k7" path="res://icon.svg" id="1_2j8v0"]
 [ext_resource type="Script" path="res://Behaviours/PlayerBehaviour.gd" id="1_6kk2a"]
 [ext_resource type="Script" path="res://Behaviours/box1.gd" id="1_xtet4"]
 [ext_resource type="Texture2D" uid="uid://6sy7xbsp285o" path="res://Sprites/Player/t4.bmp" id="3_34emg"]
-[ext_resource type="Texture2D" uid="uid://5vyuj7hobykg" path="res://Sprites/Guns/ak47.bmp" id="4_syh0q"]
 [ext_resource type="Texture2D" uid="uid://dokmjaxd6a6bu" path="res://Sprites/Cursor/CenterCursor.png" id="6_65n15"]
 [ext_resource type="Texture2D" uid="uid://c82a6dkiv63rf" path="res://Sprites/Cursor/dinamic.png" id="6_ygttj"]
 [ext_resource type="Script" path="res://Behaviours/CenterSights.gd" id="7_en6jb"]
@@ -194,7 +193,6 @@ metadata/_edit_lock_ = true
 
 [node name="Gun" type="Sprite2D" parent="Player/PlayerAppearance"]
 position = Vector2(1, -21.3333)
-texture = ExtResource("4_syh0q")
 metadata/_edit_lock_ = true
 
 [node name="MainCamera" type="Camera2D" parent="Player/PlayerAppearance"]
@@ -247,7 +245,7 @@ metadata/_edit_lock_ = true
 
 [node name="Gun" type="Sprite2D" parent="MotherEnemy/EnemyAppearance"]
 position = Vector2(0.666668, -19.6667)
-texture = ExtResource("4_syh0q")
+metadata/_edit_lock_ = true
 
 [node name="FrictionCanvas" type="Area2D" parent="."]
 visible = false
