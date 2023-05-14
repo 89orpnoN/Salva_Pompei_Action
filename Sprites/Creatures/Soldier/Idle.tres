@@ -1,0 +1,30 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://bdtskf2f0877y"]
+
+[ext_resource type="Texture2D" uid="uid://cl60chqi1hs7a" path="res://Sprites/Player/Soldato.png" id="1_4o8hk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c0sgc"]
+atlas = ExtResource("1_4o8hk")
+region = Rect2(32, 0, 27, 27)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1un8u"]
+atlas = ExtResource("1_4o8hk")
+region = Rect2(0, 0, 27, 27)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c0sgc")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1un8u")
+}],
+"loop": true,
+"name": &"Reload",
+"speed": 5.0
+}]

@@ -1,15 +1,12 @@
-[gd_scene load_steps=27 format=3 uid="uid://d1k4oryfdvy6u"]
+[gd_scene load_steps=23 format=3 uid="uid://d1k4oryfdvy6u"]
 
 [ext_resource type="Texture2D" uid="uid://1vdf3v0kc8k7" path="res://icon.svg" id="1_2j8v0"]
 [ext_resource type="Script" path="res://Behaviours/PlayerBehaviour.gd" id="1_6kk2a"]
 [ext_resource type="Script" path="res://Behaviours/box1.gd" id="1_xtet4"]
-[ext_resource type="Texture2D" uid="uid://6sy7xbsp285o" path="res://Sprites/Player/t4.bmp" id="3_34emg"]
 [ext_resource type="Texture2D" uid="uid://dokmjaxd6a6bu" path="res://Sprites/Cursor/CenterCursor.png" id="6_65n15"]
 [ext_resource type="Texture2D" uid="uid://c82a6dkiv63rf" path="res://Sprites/Cursor/dinamic.png" id="6_ygttj"]
 [ext_resource type="Script" path="res://Behaviours/CenterSights.gd" id="7_en6jb"]
-[ext_resource type="Script" path="res://Behaviours/DynamicSights.gd" id="8_in1q8"]
 [ext_resource type="Script" path="res://Behaviours/MotherBullet.gd" id="8_yp5dv"]
-[ext_resource type="NavigationPolygon" uid="uid://dtmr0fbx00ip3" path="res://MainGame.tres" id="10_gq7mo"]
 [ext_resource type="Texture2D" uid="uid://bsnvkbsc5lsa" path="res://Sprites/Player/Mercenary.bmp" id="12_rmy84"]
 [ext_resource type="Script" path="res://Behaviours/MotherEnemy.gd" id="12_suwb8"]
 
@@ -30,26 +27,6 @@ friction = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tkp2k"]
 radius = 38.0
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_elkft"]
-atlas = ExtResource("3_34emg")
-region = Rect2(31, 64, 31, 32)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_nsy7p"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_elkft")
-}],
-"loop": true,
-"name": &"Idle",
-"speed": 5.0
-}, {
-"frames": [],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xkdnr"]
 size = Vector2(16, 16)
@@ -92,8 +69,13 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7kh2"]
 size = Vector2(1e+06, 1e+06)
 
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_htpnp"]
+vertices = PackedVector2Array(-31824, -17748, 30504, -18053, 630, -372, -642, -365, 30250, 19537, 641, 338, 640, 122, -32687, 20197, -673, 344, -671, 122, 628, -197, -642, -197)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(1, 4, 5, 6), PackedInt32Array(5, 4, 7, 8), PackedInt32Array(8, 7, 0, 9), PackedInt32Array(2, 1, 6, 10), PackedInt32Array(9, 0, 3, 11), PackedInt32Array(6, 9, 11, 10)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(630, -372, 628, -197, -642, -197, -642, -365), PackedVector2Array(-671, 122, -673, 344, 641, 338, 640, 122), PackedVector2Array(-31824, -17748, -32687, 20197, 30250, 19537, 30504, -18053)])
+
 [node name="World" type="Node2D" groups=["GodNode"]]
-position = Vector2(0, 4)
+position = Vector2(18, -64)
 
 [node name="box" type="RigidBody2D" parent="." groups=["MapPhisicsOstacles"]]
 z_index = 6
@@ -139,9 +121,9 @@ shape = SubResource("RectangleShape2D_suw1q")
 scale = Vector2(9.00391, 0.609375)
 texture = ExtResource("1_2j8v0")
 
-[node name="Player" type="RigidBody2D" parent="." groups=["Players"]]
+[node name="Player" type="RigidBody2D" parent="."]
 z_index = 5
-position = Vector2(-343, -29)
+position = Vector2(-360, -3)
 collision_mask = 3
 mass = 100.0
 inertia = 10.0
@@ -159,24 +141,20 @@ metadata/_edit_lock_ = true
 
 [node name="1" type="Sprite2D" parent="Player/CenterSight"]
 texture = ExtResource("6_ygttj")
-script = ExtResource("8_in1q8")
 metadata/_edit_lock_ = true
 
 [node name="2" type="Sprite2D" parent="Player/CenterSight"]
 texture = ExtResource("6_ygttj")
-script = ExtResource("8_in1q8")
 metadata/Pos = [true, true]
 metadata/_edit_lock_ = true
 
 [node name="3" type="Sprite2D" parent="Player/CenterSight"]
 texture = ExtResource("6_ygttj")
-script = ExtResource("8_in1q8")
 metadata/Pos = [true, true]
 metadata/_edit_lock_ = true
 
 [node name="4" type="Sprite2D" parent="Player/CenterSight"]
 texture = ExtResource("6_ygttj")
-script = ExtResource("8_in1q8")
 metadata/Pos = [true, true]
 metadata/_edit_lock_ = true
 
@@ -185,14 +163,12 @@ shape = SubResource("CircleShape2D_tkp2k")
 metadata/_edit_lock_ = true
 
 [node name="PlayerAppearance" type="AnimatedSprite2D" parent="Player"]
+position = Vector2(0, -1)
 scale = Vector2(3, 3)
-sprite_frames = SubResource("SpriteFrames_nsy7p")
 animation = &"Idle"
-offset = Vector2(-0.5, -4)
-metadata/_edit_lock_ = true
+offset = Vector2(1, -3.5)
 
 [node name="Gun" type="Sprite2D" parent="Player/PlayerAppearance"]
-position = Vector2(1, -21.3333)
 metadata/_edit_lock_ = true
 
 [node name="MainCamera" type="Camera2D" parent="Player/PlayerAppearance"]
@@ -265,6 +241,6 @@ shape = SubResource("RectangleShape2D_j7kh2")
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="FrictionCanvas"]
 visible = false
 position = Vector2(7, 94)
-navigation_polygon = ExtResource("10_gq7mo")
+navigation_polygon = SubResource("NavigationPolygon_htpnp")
 
 [connection signal="velocity_computed" from="MotherEnemy/PathMaker" to="MotherEnemy" method="_on_path_maker_velocity_computed"]

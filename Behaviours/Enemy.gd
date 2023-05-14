@@ -15,10 +15,9 @@ var MoveDirections = Vector2()
 
 
 func _ready():
-	seeker = get_closest_node(get_tree().get_nodes_in_group("Players"))
 	set_lock_rotation_enabled(false)
+	
 	Navigator = get_node("PathMaker")
-	MoveDirections = CreatePath()
 	ActionKeys = {
 		"forward":[Key(10),Key(11)],
 		"backward":[Key(20),Key(21)],
@@ -32,23 +31,27 @@ func _ready():
 					func_to_apply.call()
 					break
 	}
+	BaseClasses.Morph(self,get_node("EnemyAppearance"),creatureObject)
 	BaseClasses.EquipGun(creatureObject,creatureObject.Gun,self,get_node("EnemyAppearance/Gun"))
 	MVMForce = creatureObject.MovementForce
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	ActionsArr = []
-	if creatureObject.Health <= 0:
-		queue_free()
+	if seeker != null:
+		ActionsArr = []
+		if creatureObject.Health <= 0:
+			queue_free()
 
-	if creatureObject.State == BaseClasses.CHASING: 
-		chasephase(delta)
+		if creatureObject.State == BaseClasses.CHASING: 
+			chasephase(delta)
 
-	elif creatureObject.State == BaseClasses.SLEEPING:
-		sleepPhase(delta)
-	elif creatureObject.State == BaseClasses.ATTACKING:
-		attackphase(delta)
-	Actions(delta)
+		elif creatureObject.State == BaseClasses.SLEEPING:
+			sleepPhase(delta)
+		elif creatureObject.State == BaseClasses.ATTACKING:
+			attackphase(delta)
+		Actions(delta)
+	else:
+		seeker = get_closest_node(get_tree().get_nodes_in_group("Players"))
 
 func attackphase(delta):
 	if BaseClasses.isObjectVisible(self,seeker) and BaseClasses.inRange(creatureObject,seeker.global_position):
@@ -56,7 +59,6 @@ func attackphase(delta):
 		ActionsArr.append(50)
 	else:
 		creatureObject.State = BaseClasses.CHASING
-		
 
 
 
@@ -126,7 +128,7 @@ func ShootTry():
 	BaseClasses.ShootProjectile(creatureObject)
 
 func ReloadTry():
-	BaseClasses.Reload(creatureObject.Gun)
+	BaseClasses.Reload(creatureObject)
 	
 func get_closest_node(nodes):
 	var min = null

@@ -21,10 +21,11 @@ func GunAppearance(Sprite = null,DropSprite = null, BuySprite=null,KillSprite=nu
 	}
 	return gunAppearance.duplicate()
 
-func Gun(gunnode,bulletwait = 1,damage = 1,speed = 10000 ,maxdistance = 10000,basespread = 5,spreadmultiplier = 0.1, Magazine=30, ReloadWait = 1,SingleShotReload = false,bulletamount = 1, gunappearance = GunAppearance()):
+func Gun(gunnode = null,bulletwait = 1,damage = 1,speed = 10000 ,maxdistance = 10000,Recoil = 1,basespread = 5,spreadmultiplier = 0.1, Magazine=30, ReloadWait = 1,SingleShotReload = false,bulletamount = 1, gunappearance = GunAppearance()):
 			var gun = {
 			"GunNode":gunnode,
 			"CanFire":true,
+			"AdditiveRecoil":0,
 			"InterruptReload":false,
 			"BulletsRemaining":Magazine,
 			"IsReloading":false,
@@ -32,6 +33,7 @@ func Gun(gunnode,bulletwait = 1,damage = 1,speed = 10000 ,maxdistance = 10000,ba
 			"Damage": damage,
 			"Speed":speed,
 			"Range":maxdistance,
+			"BulletRecoil":Recoil,
 			"BaseSpread":basespread,  #expressed in degrees
 			"SpreadMultiplier":spreadmultiplier,
 			"Magazine":Magazine,
@@ -62,7 +64,33 @@ func isObjectVisible(obj,obj2):
 		return true
 	return false
 
-func Creature(target,health = 100,movementforce = [10**4,10**4,10**4,10**4],mass = 100,turnforce =10000,rotationoffset=0,gun = null,projectileoffset = Vector2(50,0),team = "None"):
+func CreatureAppearance(AnimNode,AnimFile,IdleAnim = "Idle",MeleeAnim = "Melee",ReloadAnim = "Reload",Offset = Vector2(0,0), Scale = Vector2(1,1),HitSfx = null,PainSfx = null,deathsfx = null,stepsfx = null):
+	var CreatureAppearance = {
+		"AnimNode":AnimNode,
+		"AnimFile":AnimFile,
+		"IdleAnim":IdleAnim,
+		"MeleeAnim":MeleeAnim,
+		"ReloadAnim":ReloadAnim,
+		"Offset":Offset,
+		"Scale":Scale,
+		"HitSfx":HitSfx,
+		"PainSfx":PainSfx,
+		"deathsfx":deathsfx,
+		"stepsfx":stepsfx,
+	}	
+	return CreatureAppearance.duplicate()
+	
+	
+func Morph(Target,AnimNode,Creature,NewTeam = Creature.Team):
+	Target.creatureObject = Creature
+	Target.creatureObject.Team = NewTeam
+	Target.add_to_group(NewTeam)
+	Target.creatureObject.CreatureAppearance.AnimNode = AnimNode
+	AnimNode.set_sprite_frames(Target.creatureObject.CreatureAppearance.AnimFile)
+	AnimNode.set_animation(Target.creatureObject.CreatureAppearance.IdleAnim)
+
+
+func Creature(target,health = 100,movementforce = [250000,250000,250000,250000],mass = 100,turnforce =100000,rotationoffset=0,gun = null,projectileoffset = Vector2(50,0),team = "None",CreatureAppearance = null):
 		var creature = {
 		"State":0,
 		"Target":target,
@@ -74,6 +102,7 @@ func Creature(target,health = 100,movementforce = [10**4,10**4,10**4,10**4],mass
 		"Gun": gun,
 		"ProjectileOffset":projectileoffset,
 		"Team":team,
+		"CreatureAppearance":CreatureAppearance
 }
 		return creature.duplicate()
 		
@@ -85,21 +114,65 @@ func setGunAppearance(GunNode, Gunappearance):
 func EquipGun(creature,gun,target,gunnode):
 	creature.Gun = gun
 	CreatureLink(creature,target,gunnode)
-	setGunAppearance(creature.Gun.GunNode, creature.Gun.gunAppearance)
 	PlaySound(creature.Target,creature.Gun.gunAppearance.DrawSFX)
 	
-func BulletSpread(creature):
+func ChangeGun(creature,Newgun):
+	Newgun.CanFire = false
+	var GunNode = creature.Gun.GunNode
+	creature.Gun = Newgun
+	CreatureLink(creature,creature.Target,GunNode)
+	PlaySound(creature.Target,creature.Gun.gunAppearance.DrawSFX)
+	var TrueReloadWait = Newgun.ReloadWait
+	if Newgun.SingleShotReload:
+		TrueReloadWait = Newgun.ReloadWait/Newgun.Magazine
+	await sleep(TrueReloadWait)
+	Newgun.CanFire = true
+
+func arrayAt(arr,idx):
+	if idx >= len(arr):
+		return arr[idx-len(arr)]
+	if idx < 0:
+		return arr[idx+len(arr)]
+	return arr[idx]
+
+func DissipateRecoil(delta,gun):
+	if gun.AdditiveRecoil>0:
+		gun.AdditiveRecoil -=60*delta
+
+func MaxBulletSpread(creature):
 	var gun = creature.Gun
 	var velocity = creature.Target.get_linear_velocity()
 	var actualVelocity = sqrt(velocity.x**2+velocity.y**2)
-	var Rand_angle = (actualVelocity*gun.SpreadMultiplier+gun.BaseSpread)/2
-	return randf_range(-Rand_angle,Rand_angle)
+	var Inaccuracy = (actualVelocity*gun.SpreadMultiplier+gun.BaseSpread+gun.AdditiveRecoil)/2
+	return Inaccuracy
 	
+func BulletSpread(creature):
+	var bulletSpread = MaxBulletSpread(creature)
+	return randf_range(-bulletSpread,bulletSpread)
+	
+
+func meleeAnim(creature):
+	var rotation = creature.CreatureAppearance.AnimNode.rotation
+	var itime = Time.get_ticks_msec()
+	var delta = 0
+	var max = 100
+	print("pollo")
+	while delta < max:
+		delta = ((Time.get_ticks_msec()-itime)/2)
+		creature.CreatureAppearance.AnimNode.rotation = rotation + sin((delta%max)*(PI/max))
+		print(rad_to_deg(sin(Time.get_ticks_msec()-itime)))
+		await sleep(0.016)
+	creature.CreatureAppearance.AnimNode.rotation = rotation
+
 func ShootProjectile(creature): 
 	var gun = creature.Gun
+	var MeleeMaxRange = 100
 	if gun.CanFire:
 		if not gun.IsReloading:
 			if gun.BulletsRemaining > 0:
+				if gun.Range < MeleeMaxRange:
+					meleeAnim(creature)
+					reloadGun(creature)
 				gun.CanFire = false
 				var actual_rotation = creature.Target.global_rotation_degrees+creature.RotationOffset
 				var rotatedOrigin = creature.Target.get_global_position() +(creature.ProjectileOffset.rotated(deg_to_rad(actual_rotation)))
@@ -107,7 +180,10 @@ func ShootProjectile(creature):
 				for i in range(gun.BulletAmount):
 					var randomspread = BulletSpread(creature)
 					shootprojectile.emit(rotatedOrigin,actual_rotation+randomspread,gun.Damage,gun.Speed,creature.Team,gun.Range)
+				gun.AdditiveRecoil += gun.BulletRecoil
 				gun.BulletsRemaining-= 1
+				if gun.Range < MeleeMaxRange:
+					reloadGun(creature)
 				var cockwait = 0
 				if creature.Gun.SingleShotReload:
 					cockwait = 0.4
@@ -116,7 +192,7 @@ func ShootProjectile(creature):
 				await sleep(gun.BulletWait-cockwait)
 				gun.CanFire = true
 			else:
-				reloadGun(gun)
+				reloadGun(creature)
 		else:
 			gun.InterruptReload = true
 			
@@ -135,17 +211,30 @@ func PlaySound(node,sound):
 	else:
 		print("sound: " + str(sound) + " is null")
 
-func inRange(creature, point2):
+
+func RotatedOrigin(creature):
 	var actual_rotation = creature.Target.global_rotation_degrees+creature.RotationOffset
 	var rotatedOrigin = creature.Target.get_global_position() +(creature.ProjectileOffset.rotated(deg_to_rad(actual_rotation)))
+	return rotatedOrigin
+
+func inRange(creature, point2):
+	var rotatedOrigin = RotatedOrigin(creature)
 	if (rotatedOrigin).distance_to(point2)>creature.Gun.Range:
 		return false
 	else:
 		return true
 
-func reloadGun(gun):
+func ChangeAnimation(creature,NewAnimation):
+	if creature.CreatureAppearance != null:
+		creature.CreatureAppearance.AnimNode.set_animation(NewAnimation)
+	else:
+		print("CreatureAppearance is Null")
+
+func reloadGun(creature):
+	var gun = creature.Gun
 	if not gun.IsReloading and gun.BulletsRemaining<gun.Magazine:
 		gun.IsReloading = true
+		ChangeAnimation(creature,"Reload")
 		if gun.SingleShotReload:
 			print(gun.BulletsRemaining)
 			while not gun.InterruptReload and gun.BulletsRemaining<gun.Magazine:
@@ -163,6 +252,7 @@ func reloadGun(gun):
 			gun.BulletsRemaining = gun.Magazine
 			print(gun.BulletsRemaining)
 		gun.IsReloading = false
+		ChangeAnimation(creature,"Idle")
 		gun.InterruptReload = false
 
 func SpawnEnemy(origin,creature,script,scriptToExec = null):

@@ -1,0 +1,30 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://ynm6swgegp3t"]
+
+[ext_resource type="Texture2D" uid="uid://cbgp8n5l861co" path="res://Sprites/Player/Terrorist.png" id="1_tssm6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_485kh"]
+atlas = ExtResource("1_tssm6")
+region = Rect2(34, 68, 26, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_52nph"]
+atlas = ExtResource("1_tssm6")
+region = Rect2(1, 68, 27, 25)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_485kh")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_52nph")
+}],
+"loop": true,
+"name": &"Reload",
+"speed": 5.0
+}]

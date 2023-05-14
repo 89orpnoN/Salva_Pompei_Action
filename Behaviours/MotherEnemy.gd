@@ -7,7 +7,8 @@ func _ready():
 	
 		
 	var Gun = BaseItems.getWeapon("Knife")
-	var creatureObject = BaseClasses.Creature(null,100,[300000,250000,250000,250000],100,100000,-90,Gun,Vector2(100,0),"Enemies")
+	var creatureObject = BaseItems.GetCreature("Goon")
+	creatureObject.Gun = Gun
 	var script = load("res://Behaviours/Enemy.gd")
 	SpawnEnemy(Vector2(0,400),creatureObject,script,null)
 

@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=4 format=3 uid="uid://d0g115tsoxhr7"]
 
 [ext_resource type="Texture2D" uid="uid://1vdf3v0kc8k7" path="res://icon.svg" id="1_4lk0t"]
 [ext_resource type="Script" path="res://Behaviours/PlayerBehaviour.gd" id="2_qdq7m"]
-
 
 [sub_resource type="SkeletonModificationStack2D" id="SkeletonModificationStack2D_odb8b"]
 

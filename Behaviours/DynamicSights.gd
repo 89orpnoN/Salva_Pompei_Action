@@ -12,7 +12,7 @@ func _ready():
 func _process(delta):
 	velocity = Root.get_linear_velocity()
 	var actualVelocity = sqrt(velocity.x**2+velocity.y**2)
-	var dist = Root.get_global_position().distance_to(get_global_mouse_position())*((actualVelocity*Root.creatureObject.Gun.SpreadMultiplier+Root.creatureObject.Gun.BaseSpread)/180)
+	var dist = BaseClasses.RotatedOrigin(Root.creatureObject).distance_to(get_global_mouse_position())*(BaseClasses.MaxBulletSpread(Root.creatureObject)/90)
 	var position = Vector2()
 	
 	

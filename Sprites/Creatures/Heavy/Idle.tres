@@ -1,0 +1,30 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://fca8iqtg63qo"]
+
+[ext_resource type="Texture2D" uid="uid://eexxg8ngrh2l" path="res://Sprites/Player/Heavy.png" id="1_jc1ia"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5ie3k"]
+atlas = ExtResource("1_jc1ia")
+region = Rect2(33, 68, 27, 27)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vwakj"]
+atlas = ExtResource("1_jc1ia")
+region = Rect2(2, 68, 27, 27)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5ie3k")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vwakj")
+}],
+"loop": true,
+"name": &"Reload",
+"speed": 5.0
+}]

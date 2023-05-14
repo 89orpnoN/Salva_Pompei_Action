@@ -32,7 +32,7 @@ extends Node
 """ "Template":BaseClasses.GunAppearance(load(),load(),load(),load(),Vector2(0,0),Vector2(1,1),load(),null,load(),load()), """
 
 func getWeapon(key):
-	return Weapons[key].duplicate()
+	return Weapons[key].duplicate(true)
 
 var GunAppearances = {
 	"Ak-47":BaseClasses.GunAppearance(load("res://Sprites/Guns/Memeoji/ak47.png"),load("res://Sprites/Guns/Memeoji/ak47_d.png"),load("res://Sprites/Guns/Memeoji/ak47_m.png"),load("res://Sprites/Guns/Memeoji/ak47_k.png"),Vector2(1,-21.3333),Vector2(1,1),load("res://SFX/ak-47/Gunshot.mp3"),null,load("res://SFX/ak-47/Pullout.mp3"),load("res://SFX/ak-47/Reload.mp3")),
@@ -48,18 +48,25 @@ var GunAppearances = {
 }
 
 var Weapons = {
-	"Punch":BaseClasses.Gun(null,0.33,25,1000,15,10,0.15,1,0.33,false,1,GunAppearances["Punch"]),
-	"Knife":BaseClasses.Gun(null,0.24,20,1000,30,0.01,0.15,1,0.24,false,1,GunAppearances["Knife"]),
-	"Ak-47":BaseClasses.Gun(null,0.11,26,7000,2200,7,0.11,30,2.2,false,1,GunAppearances["Ak-47"]),
-	"M16":BaseClasses.Gun(null,0.1,22,8000,2400,6,0.09,30,2,false,1,GunAppearances["M16"]),
-	"Deagle":BaseClasses.Gun(null,0.27,32,5500,1500,10,0.06,7,1.7,false,1,GunAppearances["Deagle"]),
-	"Magnum":BaseClasses.Gun(null,0.55,45,5700,1800,8,0.07,6,3.5,false,1,GunAppearances["Magnum"]),
-	"Glock":BaseClasses.Gun(null,0.19,18,6000,1450,15,0.05,17,2.1,false,1,GunAppearances["Glock"]),
-	"M1911":BaseClasses.Gun(null,0.24,24,5900,1450,13,0.06,8,2.1,false,1,GunAppearances["M1911"]),
-	"Itaca":BaseClasses.Gun(null,0.86,15,5200,1400,20,0.04,6,3.5,true,8,GunAppearances["Itaca"]),
-	"Spas":BaseClasses.Gun(null,0.26,13,5200,1400,24,0.06,5,3.5,true,8,GunAppearances["Spas"]),
+	"Punch":BaseClasses.Gun(null,0.33,25,1000,15,1,5,0.15,1,0.33,false,1,GunAppearances["Punch"]),
+	"Knife":BaseClasses.Gun(null,0.24,20,1000,30,1,3,0.15,1,0.24,false,1,GunAppearances["Knife"]),
+	"Ak-47":BaseClasses.Gun(null,0.11,26,7000,2200,8.1,7,0.11,30,2.2,false,1,GunAppearances["Ak-47"]),
+	"M16":BaseClasses.Gun(null,0.1,22,8000,2400,7.8,6,0.09,30,2,false,1,GunAppearances["M16"]),
+	"Deagle":BaseClasses.Gun(null,0.27,32,5500,1500,24.4,10,0.06,7,1.7,false,1,GunAppearances["Deagle"]),
+	"Magnum":BaseClasses.Gun(null,0.46,45,5700,1800,31.5,8,0.07,6,3.5,false,1,GunAppearances["Magnum"]),
+	"Glock":BaseClasses.Gun(null,0.19,18,6000,1450,15.1,15,0.05,17,2.1,false,1,GunAppearances["Glock"]),
+	"M1911":BaseClasses.Gun(null,0.24,24,5900,1450,17.2,13,0.06,8,2.1,false,1,GunAppearances["M1911"]),
+	"Itaca":BaseClasses.Gun(null,0.86,15,5200,1400,32.7,20,0.04,6,3.5,true,8,GunAppearances["Itaca"]),
+	"Spas":BaseClasses.Gun(null,0.26,13,5200,1400,30.1,24,0.06,5,3.5,true,8,GunAppearances["Spas"]),
+}
+
+var CreatureAppearances = {
+	"Goon":BaseClasses.CreatureAppearance(null,load("res://Sprites/Creatures/Goon/Idle.tres"),"Idle","Melee","Reload",Vector2(0,0),Vector2(1,1),null,null,null,null)
 }
 
 var Creatures = {
-	
+	"Goon":BaseClasses.Creature(null,100,[250000,250000,250000,250000],100,100000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Goon"])
 }
+
+func GetCreature(creaturekey):
+	return Creatures[creaturekey].duplicate(true)

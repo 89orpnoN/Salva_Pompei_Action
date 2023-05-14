@@ -1,0 +1,30 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://cfldpd3h50b2g"]
+
+[ext_resource type="Texture2D" uid="uid://bsnvkbsc5lsa" path="res://Sprites/Player/Mercenary.bmp" id="1_fsa4n"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_le11e"]
+atlas = ExtResource("1_fsa4n")
+region = Rect2(32, 0, 32, 31)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4uk2n"]
+atlas = ExtResource("1_fsa4n")
+region = Rect2(1, 0, 31, 31)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_le11e")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4uk2n")
+}],
+"loop": true,
+"name": &"Reload",
+"speed": 5.0
+}]

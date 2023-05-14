@@ -1,0 +1,30 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://dfebyx6l1hjde"]
+
+[ext_resource type="Texture2D" uid="uid://cme2ri6i1yrea" path="res://Sprites/Player/Zombie.png" id="1_owoug"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uj4pd"]
+atlas = ExtResource("1_owoug")
+region = Rect2(33, 68, 26, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tluru"]
+atlas = ExtResource("1_owoug")
+region = Rect2(1, 67, 27, 27)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uj4pd")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tluru")
+}],
+"loop": true,
+"name": &"Reload",
+"speed": 5.0
+}]
