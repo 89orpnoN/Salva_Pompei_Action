@@ -51,7 +51,7 @@ func _ready():
 		"Keys":["Punch","Knife","Ak-47","M16","Deagle","Magnum","Glock","M1911","Itaca","Spas"],
 		"CurrentIdx":0,
 	}
-	BaseClasses.Morph(self,get_node("PlayerAppearance"),BaseItems.GetCreature("Goon"),"Players")
+	BaseClasses.Morph(self,get_node("PlayerAppearance"),BaseItems.GetCreature("Heavy"),"Players")
 	BaseClasses.EquipGun(creatureObject,BaseItems.getWeapon("Glock"),self,get_node("PlayerAppearance/Gun"))
 	
 
