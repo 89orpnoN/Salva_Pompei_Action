@@ -25,6 +25,7 @@ func _ready():
 		"backward":[Key(KEY_S),Key(KEY_DOWN)],
 		"left":[Key(KEY_A),Key(KEY_LEFT)],
 		"right":[Key(KEY_D),Key(KEY_RIGHT)],
+		"walk":[Key(KEY_SHIFT),Key(KEY_CTRL)],
 		"reload":[Key(KEY_R)],
 		"shoot":[Key(MOUSE_BUTTON_LEFT,Input.is_mouse_button_pressed),Key(KEY_ALT)],
 		"NextGun":[Key(KEY_2,Input.is_key_pressed,true)],
@@ -70,6 +71,7 @@ func Actions(delta):
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.backward,func (): MoveDirections.y += 1*MVMForce[1])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.right,func (): MoveDirections.x += 1*MVMForce[2])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.left,func (): MoveDirections.x += -1*MVMForce[3])
+	ActionKeys.CheckAndExecuteKey.call(ActionKeys.walk,func (): MoveDirections /=2)
 	apply_force(MoveDirections*delta*60)
 	PointToPoint( get_global_mouse_position(),delta)
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.shoot,ShootTry)
