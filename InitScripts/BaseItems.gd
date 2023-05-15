@@ -61,11 +61,19 @@ var Weapons = {
 }
 
 var CreatureAppearances = {
-	"Goon":BaseClasses.CreatureAppearance(null,load("res://Sprites/Creatures/Goon/Idle.tres"),"Idle","Melee","Reload",Vector2(0,0),Vector2(1,1),null,null,null,null)
+	"Goon":BaseClasses.CreatureAppearance(null,load("res://Sprites/Creatures/Goon/Idle.tres"),"Idle","Melee","Reload",Vector2(0,0),Vector2(1,1),null,null,null,null),
+	"Soldier":BaseClasses.CreatureAppearance(null,load("res://Sprites/Creatures/Soldier/Idle.tres"),"Idle","Melee","Reload",Vector2(0,0),Vector2(1,1),null,null,null,null),
+	"Terrorist":BaseClasses.CreatureAppearance(null,load("res://Sprites/Creatures/terrorist/Idle.tres"),"Idle","Melee","Reload",Vector2(0,0),Vector2(1,1),null,null,null,null),
+	"Zombie":BaseClasses.CreatureAppearance(null,load("res://Sprites/Creatures/Zombie/Idle.tres"),"Idle","Melee","Reload",Vector2(0,0),Vector2(1,1),null,null,null,null),
+	"Heavy":BaseClasses.CreatureAppearance(null,load("res://Sprites/Creatures/Heavy/Idle.tres"),"Idle","Melee","Reload",Vector2(0,0),Vector2(1,1),null,null,null,null),
 }
 
 var Creatures = {
-	"Goon":BaseClasses.Creature(null,100,[250000,250000,250000,250000],100,100000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Goon"])
+	"Goon":BaseClasses.Creature(null,110,[230000,230000,230000,230000],100,100000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Goon"]),
+	"Soldier":BaseClasses.Creature(null,140,[210000,210000,210000,210000],100,100000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Soldier"]),
+	"Terrorist":BaseClasses.Creature(null,120,[230000,230000,230000,230000],100,100000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Terrorist"]),
+	"Zombie":BaseClasses.Creature(null,170,[200000,200000,200000,200000],100,100000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Zombie"]),
+	"Heavy":BaseClasses.Creature(null,220,[170000,170000,170000,170000],100,100000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Heavy"]),
 }
 
 func GetCreature(creaturekey):
