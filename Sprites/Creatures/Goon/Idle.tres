@@ -2,19 +2,19 @@
 
 [ext_resource type="Texture2D" uid="uid://bsnvkbsc5lsa" path="res://Sprites/Player/Mercenary.bmp" id="1_fsa4n"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_le11e"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_d1k85"]
 atlas = ExtResource("1_fsa4n")
-region = Rect2(32, 0, 32, 31)
+region = Rect2(33, 3, 27, 25)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4uk2n"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_v8u0d"]
 atlas = ExtResource("1_fsa4n")
-region = Rect2(1, 0, 31, 31)
+region = Rect2(3, 3, 27, 25)
 
 [resource]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_le11e")
+"texture": SubResource("AtlasTexture_d1k85")
 }],
 "loop": true,
 "name": &"Idle",
@@ -22,7 +22,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_4uk2n")
+"texture": SubResource("AtlasTexture_v8u0d")
 }],
 "loop": true,
 "name": &"Reload",
