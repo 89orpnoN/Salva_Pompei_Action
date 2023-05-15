@@ -76,7 +76,7 @@ func CreatureAppearance(AnimNode,AnimFile,IdleAnim = "Idle",MeleeAnim = "Melee",
 		"HitSfx":HitSfx,
 		"PainSfx":PainSfx,
 		"deathsfx":deathsfx,
-		"stepsfx":stepsfx,
+		"stepsfxS":stepsfx,
 	}	
 	return CreatureAppearance.duplicate()
 	
@@ -85,6 +85,8 @@ func Morph(Target,AnimNode,Creature,NewTeam = Creature.Team):
 	Target.creatureObject = Creature
 	Target.creatureObject.Team = NewTeam
 	Target.add_to_group(NewTeam)
+	Target.scale = Target.creatureObject.CreatureAppearance.Scale
+	Target.mass = Target.creatureObject.Mass
 	Target.creatureObject.CreatureAppearance.AnimNode = AnimNode
 	AnimNode.set_sprite_frames(Target.creatureObject.CreatureAppearance.AnimFile)
 	AnimNode.set_animation(Target.creatureObject.CreatureAppearance.IdleAnim)
@@ -157,12 +159,13 @@ func meleeAnim(creature):
 	var delta = 0
 	var max = 100
 	print("pollo")
-	while delta < max:
+	while delta < max and creature.Target!=null:
 		delta = ((Time.get_ticks_msec()-itime)/2)
 		creature.CreatureAppearance.AnimNode.rotation = rotation + sin((delta%max)*(PI/max))
 		print(rad_to_deg(sin(Time.get_ticks_msec()-itime)))
 		await sleep(0.016)
-	creature.CreatureAppearance.AnimNode.rotation = rotation
+	if creature.Target!=null:
+		creature.CreatureAppearance.AnimNode.rotation = rotation
 
 func ShootProjectile(creature): 
 	var gun = creature.Gun
@@ -225,7 +228,7 @@ func inRange(creature, point2):
 		return true
 
 func ChangeAnimation(creature,NewAnimation):
-	if creature.CreatureAppearance != null:
+	if creature.CreatureAppearance != null and creature.Target!=null:
 		creature.CreatureAppearance.AnimNode.set_animation(NewAnimation)
 	else:
 		print("CreatureAppearance is Null")
