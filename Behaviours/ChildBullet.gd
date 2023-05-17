@@ -7,12 +7,13 @@ var rotationValue
 var range
 var team
 var originPosition
-
+var genericHitSound
 func _init():
 	pass
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_rotation_degrees(rotation)
+	genericHitSound = load("res://SFX/BulletImpact/Wallmpact.wav")
 
 func _physics_process(delta):
 	var body
@@ -21,10 +22,15 @@ func _physics_process(delta):
 		body = collision.get_collider()
 		var a = get_groups()
 		if not "creatureObject" in body:
+			BaseClasses.PlaySound(body,genericHitSound)
 			queue_free()
 		else:
 			if not team == body.creatureObject.Team:
 				body.creatureObject.Health -= damage
+				if body.creatureObject.CreatureAppearance != null:
+					BaseClasses.PlaySound(body,body.creatureObject.CreatureAppearance.HitSfx)
+				else:
+					BaseClasses.PlaySound(body,genericHitSound)
 				queue_free()
 			else:
 				translate(speed * delta)

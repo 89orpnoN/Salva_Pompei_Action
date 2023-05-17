@@ -6,6 +6,9 @@ var ActionKeys
 var creatureObject
 var Guns
 var Inventory
+var damageTaken = false 
+var LastFrameHP
+var LastFootstep
 # Called when the node enters the scene tree for the first time.
 
 func Key(KEY, functioncheck = Input.is_key_pressed, UpNDown=false):
@@ -19,7 +22,7 @@ func Key(KEY, functioncheck = Input.is_key_pressed, UpNDown=false):
 
 func _ready():
 	Inventory = [BaseItems.getWeapon("Punch"),BaseItems.getWeapon("Knife"),BaseItems.getWeapon("Ak-47"),BaseItems.getWeapon("M16"),BaseItems.getWeapon("Deagle"),BaseItems.getWeapon("Magnum"),BaseItems.getWeapon("Glock"),BaseItems.getWeapon("M1911"),BaseItems.getWeapon("Itaca"),BaseItems.getWeapon("Spas")]
-	
+	LastFootstep = [global_position,false]
 	ActionKeys = {
 		"forward":[Key(KEY_W),Key(KEY_UP)],
 		"backward":[Key(KEY_S),Key(KEY_DOWN)],
@@ -51,18 +54,25 @@ func _ready():
 		"Keys":["Punch","Knife","Ak-47","M16","Deagle","Magnum","Glock","M1911","Itaca","Spas"],
 		"CurrentIdx":0,
 	}
-	BaseClasses.Morph(self,get_node("PlayerAppearance"),BaseItems.GetCreature("Heavy"),"Players")
+	BaseClasses.Morph(self,get_node("PlayerAppearance"),BaseItems.GetCreature("Soldier"),"Police")
 	BaseClasses.EquipGun(creatureObject,BaseItems.getWeapon("Glock"),self,get_node("PlayerAppearance/Gun"))
-	
+	LastFrameHP = creatureObject.Health
 
 
+		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+
+		
 	if creatureObject.Health <= 0:
 		queue_free()
 		print("dead")
+	
+	BaseClasses.Stepping(creatureObject)
+	
 	Actions(delta)
 	BaseClasses.DissipateRecoil(delta,creatureObject.Gun)
+
 
 func Actions(delta):
 	MoveDirections = Vector2(0,0)

@@ -6,11 +6,15 @@ func _ready():
 	BaseClasses.connect("spawnEnemy", SpawnEnemy)
 	
 		
-	var Gun = BaseItems.getWeapon("Knife")
-	var creatureObject = BaseItems.GetCreature("Zombie")
-	creatureObject.Gun = Gun
+	var creatureObject = BaseItems.GetCreature("Soldier")
+	creatureObject.Gun = BaseItems.getWeapon("M1911")
+	creatureObject.Team = "Criminals"
 	var script = load("res://Behaviours/Enemy.gd")
 	SpawnEnemy(Vector2(0,400),creatureObject,script,null)
+	creatureObject = BaseItems.GetCreature("Zombie")
+	creatureObject.Gun = BaseItems.getWeapon("Knife")
+	creatureObject.Team = "Undead"
+	SpawnEnemy(Vector2(0,0),creatureObject,script,null)
 
 func SpawnEnemy(origin,creature,script,scriptToExec = null):
 	var clone_node = duplicate(1)

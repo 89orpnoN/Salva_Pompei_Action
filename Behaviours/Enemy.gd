@@ -5,14 +5,16 @@ var creatureObject
 
 
 #queste variabili se le setta da solo
-var seeker
+var Enemies
+var Victim
 var ActionsArr
 var ActionKeys
 var MVMForce
 var Navigator
 var path = Array()
 var MoveDirections = Vector2()
-
+var damageTaken = false
+var LastFrameHP
 
 func _ready():
 	set_lock_rotation_enabled(false)
@@ -31,17 +33,28 @@ func _ready():
 					func_to_apply.call()
 					break
 	}
+	
 	BaseClasses.Morph(self,get_node("EnemyAppearance"),creatureObject)
 	BaseClasses.EquipGun(creatureObject,creatureObject.Gun,self,get_node("EnemyAppearance/Gun"))
 	MVMForce = creatureObject.MovementForce
+	Enemies = BaseClasses.get_nodes_with_groups(BaseItems.ActiveTeams,[creatureObject.Team])
+	BaseClasses.UpdateEveryX(1,self,func (): Enemies = BaseClasses.get_nodes_with_groups(BaseItems.ActiveTeams,[creatureObject.Team]))
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if seeker != null:
+	
+	damageTaken = false
+	if LastFrameHP != creatureObject.Health:
+		damageTaken = true
+	LastFrameHP = creatureObject.Health
+	BaseClasses.Stepping(creatureObject)
+	if creatureObject.Health <= 0:
+		queue_free()
+	
+	if Victim != null and self !=null:
 		ActionsArr = []
-		if creatureObject.Health <= 0:
-			queue_free()
-
+		
 		if creatureObject.State == BaseClasses.CHASING: 
 			chasephase(delta)
 
@@ -51,26 +64,34 @@ func _process(delta):
 			attackphase(delta)
 		Actions(delta)
 	else:
-		seeker = get_closest_node(get_tree().get_nodes_in_group("Players"))
+		Victim = get_closest_node(Enemies)
+	BaseClasses.DissipateRecoil(delta,creatureObject.Gun)
 
 func attackphase(delta):
-	if BaseClasses.isObjectVisible(self,seeker) and BaseClasses.inRange(creatureObject,seeker.global_position):
-		PointToPoint(seeker.global_position,delta)
+	if BaseClasses.isObjectVisible(self,Victim) and BaseClasses.inRange(creatureObject,Victim.global_position):
+		PointToPoint(Victim.global_position,delta)
 		ActionsArr.append(50)
 	else:
+		Victim = GetNewVictim()
 		creatureObject.State = BaseClasses.CHASING
+		
 
-
+func GetNewVictim():
+	for i in Enemies:
+		if i !=null:
+			if BaseClasses.isObjectVisible(self,i):
+				return i
+	return Victim
 
 func chasephase(delta):
-	if BaseClasses.isObjectVisible(self,seeker):
+	if BaseClasses.isObjectVisible(self,Victim):
 		var currentpath = Navigator.get_current_navigation_path()
 		var lenght = len(currentpath)
 		if len(currentpath) <= 1:
 			MoveDirections = CreatePath()
 		else:
 			var optimalPoint = currentpath[lenght-2]
-			if BaseClasses.inRange(creatureObject,seeker.global_position):
+			if BaseClasses.inRange(creatureObject,Victim.global_position):
 				if global_position.distance_to(optimalPoint) > 5:
 					MoveDirections = ((optimalPoint-global_position).floor() ).normalized()
 					attackphase(delta)
@@ -80,6 +101,9 @@ func chasephase(delta):
 				MoveDirections = CreatePath()
 				PointToPoint(MoveDirections+global_position ,delta)
 	else:
+		if damageTaken:
+			Victim = GetNewVictim()
+			
 		PointToPoint(MoveDirections+global_position ,delta)
 		MoveDirections = CreatePath()
 			
@@ -87,22 +111,30 @@ func chasephase(delta):
 
 func sleepPhase(delta):
 	var space_state = get_world_2d().direct_space_state
-	var query = PhysicsRayQueryParameters2D.create(global_position,seeker.global_position)
-	var result = space_state.intersect_ray(query)
-	if result:
-		if result.collider == seeker:
-			creatureObject.State = BaseClasses.CHASING
-			
-func _physics_process(delta):
-	pass
+	for i in Enemies:
+		if i!= null:
+			var query = PhysicsRayQueryParameters2D.create(global_position,i.global_position)
+			var result = space_state.intersect_ray(query)
+			if result:
+				if result.collider == i:
+					creatureObject.State = BaseClasses.CHASING
+					Victim = i
+					break
+	if damageTaken:
+		Victim = get_closest_node(Enemies)
+		creatureObject.State = BaseClasses.CHASING
+				
+
 		
 func CreatePath():
-	Navigator.set_target_position(seeker.global_position)
+	Navigator.set_target_position(Victim.global_position)
 	path = (-global_position+Navigator.get_next_path_position()).normalized()
 	return path
 
 func Key(KEY, functioncheck = isInActions):
 	return BaseClasses.SKey(KEY, functioncheck)
+
+
 
 func isInActions(i):
 	if i in ActionsArr:
@@ -135,13 +167,14 @@ func get_closest_node(nodes):
 	var a 
 	var temp
 	for i in nodes:
-		if min == null:
-			a = i
-			temp = global_position.distance_to(i.global_position)
-		else:
-			if global_position.distance_to(i.global_position) < temp:
-				temp = global_position.distance_to(i.global_position)
+		if i != null:
+			if min == null:
 				a = i
+				temp = global_position.distance_to(i.global_position)
+			else:
+				if global_position.distance_to(i.global_position) < temp:
+					temp = global_position.distance_to(i.global_position)
+					a = i
 	return a
 	
 
