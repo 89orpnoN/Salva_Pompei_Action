@@ -21,7 +21,7 @@ func Key(KEY, functioncheck = Input.is_key_pressed, UpNDown=false):
 	return key
 
 func _ready():
-	Inventory = [BaseItems.getWeapon("Punch"),BaseItems.getWeapon("Knife"),BaseItems.getWeapon("Ak-47"),BaseItems.getWeapon("M16"),BaseItems.getWeapon("Deagle"),BaseItems.getWeapon("Magnum"),BaseItems.getWeapon("Glock"),BaseItems.getWeapon("M1911"),BaseItems.getWeapon("Itaca"),BaseItems.getWeapon("Spas")]
+	Inventory = [BaseItems.getWeapon("Punch"),BaseItems.getWeapon("Knife"),BaseItems.getWeapon("Ak-47"),BaseItems.getWeapon("Magnum")]
 	LastFootstep = [global_position,false]
 	ActionKeys = {
 		"forward":[Key(KEY_W),Key(KEY_UP)],
@@ -33,12 +33,15 @@ func _ready():
 		"shoot":[Key(MOUSE_BUTTON_LEFT,Input.is_mouse_button_pressed),Key(KEY_ALT)],
 		"NextGun":[Key(KEY_2,Input.is_key_pressed,true)],
 		"PreviousGun":[Key(KEY_1,Input.is_key_pressed,true)],
-		"CheckAndExecuteKey": func (KeyArr, func_to_apply):
+		"CheckAndExecuteKey": func (KeyArr, func_to_apply,arguments = null):
 				for i in KeyArr:
 					if i.FunctionCheck.call(i.Value):
 						if i.UpNDown:
 							if i.WasDown == false:
-								func_to_apply.call()
+								if arguments != null:
+									func_to_apply.callv(arguments)
+								else:
+									func_to_apply.call()
 								i.WasDown = true
 						else:
 							func_to_apply.call()
@@ -50,14 +53,11 @@ func _ready():
 				
 	}
 	
-	Guns = {
-		"Keys":["Punch","Knife","Ak-47","M16","Deagle","Magnum","Glock","M1911","Itaca","Spas"],
-		"CurrentIdx":0,
-	}
 	BaseClasses.Morph(self,get_node("PlayerAppearance"),BaseItems.GetCreature("Soldier"),"Police")
-	BaseClasses.EquipGun(creatureObject,BaseItems.getWeapon("Glock"),self,get_node("PlayerAppearance/Gun"))
+	BaseClasses.AddThingsToInventory(creatureObject,Inventory)
+	BaseClasses.EquipGun(creatureObject,BaseClasses.arrayAt(BaseClasses.GetAllThings(creatureObject),0),self,get_node("PlayerAppearance/Gun"))
 	LastFrameHP = creatureObject.Health
-
+	
 
 		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -86,19 +86,13 @@ func Actions(delta):
 	PointToPoint( get_global_mouse_position(),delta)
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.shoot,ShootTry)
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.reload,ReloadTry)
-	ActionKeys.CheckAndExecuteKey.call(ActionKeys.PreviousGun,Prevgun)
-	ActionKeys.CheckAndExecuteKey.call(ActionKeys.NextGun,Nextgun)
-	
-	
-func Prevgun(): 
-	BaseClasses.ChangeGun(creatureObject,BaseClasses.arrayAt(Inventory,Inventory.find(creatureObject.Gun)-1))
+	ActionKeys.CheckAndExecuteKey.call(ActionKeys.PreviousGun,BaseClasses.ChangeGun,[creatureObject,-1])
+	ActionKeys.CheckAndExecuteKey.call(ActionKeys.NextGun,BaseClasses.ChangeGun,[creatureObject,1])
 
-func Nextgun(): 
-	BaseClasses.ChangeGun(creatureObject,BaseClasses.arrayAt(Inventory,Inventory.find(creatureObject.Gun)+1))
 
 
 func ShootTry():
-	BaseClasses.ShootProjectile(creatureObject)
+	creatureObject.Gun.OnShoot.callv(creatureObject.Gun.OnShootParams)
 
 func ReloadTry():
 	BaseClasses.reloadGun(creatureObject)

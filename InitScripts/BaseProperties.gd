@@ -22,7 +22,7 @@ func GunAppearance(Sprite = null,DropSprite = null, BuySprite=null,KillSprite=nu
 	return gunAppearance.duplicate()
 
 
-func Gun(gunnode = null,bulletwait = 1,damage = 1,speed = 10000 ,maxdistance = 10000,Recoil = 1,basespread = 5,spreadmultiplier = 0.1, Magazine=30, ReloadWait = 1,SingleShotReload = false,bulletamount = 1, gunappearance = GunAppearance()):
+func Gun(gunnode = null,bulletwait = 1,damage = 1,speed = 10000 ,maxdistance = 10000,Recoil = 1,basespread = 5,spreadmultiplier = 0.1, Magazine=30, ReloadWait = 1,SingleShotReload = false,bulletamount = 1, gunappearance = GunAppearance(),IsMelee=false,Category="Rifle", OnShoot = ShootProjectile, OnShootParams = []):
 	var gun = {
 	"GunNode":gunnode,
 	"CanFire":true,
@@ -42,6 +42,9 @@ func Gun(gunnode = null,bulletwait = 1,damage = 1,speed = 10000 ,maxdistance = 1
 	"SingleShotReload":SingleShotReload,
 	"BulletAmount":bulletamount,
 	"gunAppearance":gunappearance,
+	"IsMelee":IsMelee,
+	"Category":Category,
+	"OnShoot":OnShoot,
 	}
 	return gun.duplicate()
 
@@ -51,8 +54,18 @@ func EquipGun(creature,gun,target,gunnode): #for first time equip only
 	CreatureLink(creature,target,gunnode)
 	PlaySound(creature.Target,creature.Gun.gunAppearance.DrawSFX)
 
+func GetAllThings(creature):
+	var Items = []
+	Items.append_array(creature.Inventory.Rifles[0])
+	Items.append_array(creature.Inventory.Pistols[0])
+	Items.append_array(creature.Inventory.Melee[0])
+	Items.append_array(creature.Inventory.Items[0])
+	return Items
 
-func ChangeGun(creature,Newgun): #can be called if the gun and the creature have been paired with the instance
+func ChangeGun(creature,Idx): #can be called if the gun and the creature have been paired with the instance
+	
+	var Items = GetAllThings(creature)
+	var Newgun = arrayAt(Items,(Items.find(creature.Gun))+Idx)
 	Newgun.CanFire = false
 	var GunNode = creature.Gun.GunNode
 	creature.Gun = Newgun
@@ -64,6 +77,57 @@ func ChangeGun(creature,Newgun): #can be called if the gun and the creature have
 	await sleep(TrueReloadWait)
 	Newgun.CanFire = true
 
+func Inventory(RifleLimit = 1, PistolLimit= 1,MeleeLimit=2 ,ItemLimit = 2,Rifles = [],Pistols = [],Melees=[],Items=[],MiscItems=[],Armor = null):
+	var inventory = {
+		"Rifles":[Rifles,RifleLimit],
+		"Pistols":[Pistols,PistolLimit],
+		"Melee":[Melees,MeleeLimit],
+		"Items":[Items,ItemLimit],
+		"Armor":Armor,
+		"MiscItems":[MiscItems,-1],
+		"Equipped":[],
+	}
+	return inventory.duplicate(true)
+
+func SetInventory(creature,Inventory):
+	creature.Inventory = Inventory
+	
+func AddThingsToInventory(Creature,ItemArr):
+	for i in ItemArr:
+		if not AddThingToInventory(Creature,i):
+			return false
+	return false
+	
+func AddThingToInventory(Creature,item):
+	var Inv = Creature.Inventory
+	if item.Category == null:
+		print("item does not have category")
+		return false
+	match item.Category:
+		"Rifle":
+			if len(Inv.Rifles[0])<Inv.Rifles[1]:
+				Inv.Rifles[0].append(item)
+			else:
+				return false
+		"Pistol":
+			if len(Inv.Pistols[0])<Inv.Pistols[1]:
+				Inv.Pistols[0].append(item)
+			else:
+				return false
+		"Melee":
+			if len(Inv.Melee[0])<Inv.Melee[1]:
+				Inv.Melee[0].append(item)
+		"Item":
+			if len(Inv.Items[0])<Inv.Items[1]:
+				Inv.Items[0].append(item)
+			else:
+				return false
+		"MiscItem":
+			if len(Inv.MiscItems[0])<Inv.MiscItems[1]:
+				Inv.MiscItems[0].append(item)
+			else:
+				return false
+	return true
 
 func CreatureAppearance(AnimNode,AnimFile,IdleAnim = "Idle",MeleeAnim = "Melee",ReloadAnim = "Reload",Offset = Vector2(0,0), Scale = Vector2(1,1),HitSfx = null,PainSfx = null,deathsfx = null,stepsfx = null):
 	var CreatureAppearance = {
@@ -83,11 +147,12 @@ func CreatureAppearance(AnimNode,AnimFile,IdleAnim = "Idle",MeleeAnim = "Melee",
 	return CreatureAppearance.duplicate()
 
 
-func Creature(target,health = 100,movementforce = [250000,250000,250000,250000],mass = 100,turnforce =100000,rotationoffset=0,gun = null,projectileoffset = Vector2(50,0),team = "None",CreatureAppearance = null):
+func Creature(target,health = 100,inventory = Inventory(),movementforce = [250000,250000,250000,250000],mass = 100,turnforce =100000,rotationoffset=0,gun = null,projectileoffset = Vector2(50,0),team = "None",CreatureAppearance = null):
 	var creature = {
 	"State":0,
 	"Target":target,
 	"Health":health,
+	"Inventory":inventory,
 	"MovementForce":movementforce,
 	"Mass":mass,
 	"TurnForce":turnforce,
@@ -95,7 +160,7 @@ func Creature(target,health = 100,movementforce = [250000,250000,250000,250000],
 	"Gun": gun,
 	"ProjectileOffset":projectileoffset,
 	"Team":team,
-	"CreatureAppearance":CreatureAppearance
+	"CreatureAppearance":CreatureAppearance,
 	
 	}
 	return creature.duplicate()
@@ -117,6 +182,7 @@ func Morph(Target,AnimNode,Creature,NewTeam = Creature.Team): #to only use once 
 func CreatureLink(Creature,target,gunnode): #to use with the gun alredy paired to the Creature, can be used to set up the target and gun node
 	Creature.Target = target
 	Creature.Gun.GunNode = gunnode
+	Creature.Gun.OnShootParams  = [Creature]
 	setGunAppearance(gunnode,Creature.Gun.gunAppearance)
 
 

@@ -157,7 +157,7 @@ func Actions(delta):
 
 
 func ShootTry():
-	BaseClasses.ShootProjectile(creatureObject)
+	creatureObject.Gun.OnShoot.callv(creatureObject.Gun.OnShootParams)
 
 func ReloadTry():
 	BaseClasses.Reload(creatureObject)

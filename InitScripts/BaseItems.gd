@@ -14,16 +14,16 @@ var GunAppearances = {
 }
 
 var Weapons = {
-	"Punch":BaseClasses.Gun(null,0.33,25,1000,15,1,5,0.15,1,0.33,false,1,GunAppearances["Punch"]),
-	"Knife":BaseClasses.Gun(null,0.24,20,1000,30,1,3,0.15,1,0.24,false,1,GunAppearances["Knife"]),
-	"Ak-47":BaseClasses.Gun(null,0.11,26,7000,2200,8.1,7,0.11,30,2.2,false,1,GunAppearances["Ak-47"]),
-	"M16":BaseClasses.Gun(null,0.1,22,8000,2400,7.8,6,0.09,30,2,false,1,GunAppearances["M16"]),
-	"Deagle":BaseClasses.Gun(null,0.27,32,5500,1500,24.4,10,0.06,7,1.7,false,1,GunAppearances["Deagle"]),
-	"Magnum":BaseClasses.Gun(null,0.46,45,5700,1800,31.5,8,0.07,6,3.5,false,1,GunAppearances["Magnum"]),
-	"Glock":BaseClasses.Gun(null,0.19,18,6000,1450,15.1,15,0.05,17,2.1,false,1,GunAppearances["Glock"]),
-	"M1911":BaseClasses.Gun(null,0.24,24,5900,1450,17.2,13,0.06,8,2.1,false,1,GunAppearances["M1911"]),
-	"Itaca":BaseClasses.Gun(null,0.86,15,5200,1400,32.7,20,0.04,6,3.5,true,8,GunAppearances["Itaca"]),
-	"Spas":BaseClasses.Gun(null,0.26,13,5200,1400,30.1,24,0.06,5,3.5,true,8,GunAppearances["Spas"]),
+	"Punch":BaseClasses.Gun(null,0.33,25,1000,15,1,5,0.15,1,0.33,false,1,GunAppearances["Punch"],true,"Melee"),
+	"Knife":BaseClasses.Gun(null,0.24,20,1000,30,1,3,0.15,1,0.24,false,1,GunAppearances["Knife"],true,"Melee"),
+	"Ak-47":BaseClasses.Gun(null,0.11,26,7000,2200,8.1,7,0.11,30,2.2,false,1,GunAppearances["Ak-47"],false,"Rifle"),
+	"M16":BaseClasses.Gun(null,0.1,22,8000,2400,7.8,6,0.09,30,2,false,1,GunAppearances["M16"],false,"Rifle"),
+	"Deagle":BaseClasses.Gun(null,0.27,32,5500,1500,24.4,10,0.06,7,1.7,false,1,GunAppearances["Deagle"],false,"Pistol"),
+	"Magnum":BaseClasses.Gun(null,0.46,45,5700,1800,31.5,8,0.07,6,3.5,false,1,GunAppearances["Magnum"],false,"Pistol"),
+	"Glock":BaseClasses.Gun(null,0.19,18,6000,1450,15.1,15,0.05,17,2.1,false,1,GunAppearances["Glock"],false,"Pistol"),
+	"M1911":BaseClasses.Gun(null,0.24,24,5900,1450,17.2,13,0.06,8,2.1,false,1,GunAppearances["M1911"],false,"Pistol"),
+	"Itaca":BaseClasses.Gun(null,0.86,15,5200,1400,32.7,20,0.04,6,3.5,true,8,GunAppearances["Itaca"],false,"Rifle"),
+	"Spas":BaseClasses.Gun(null,0.26,13,5200,1400,30.1,24,0.06,5,3.5,true,8,GunAppearances["Spas"],false,"Rifle"),
 }
 
 func getWeapon(key):
@@ -40,11 +40,11 @@ var CreatureAppearances = {
 }
 
 var Creatures = {
-	"Goon":BaseClasses.Creature(null,110,[200000,200000,200000,200000],80,110000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Goon"]),
-	"Soldier":BaseClasses.Creature(null,140,[200000,200000,200000,200000],90,100000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Soldier"]),
-	"Terrorist":BaseClasses.Creature(null,120,[200000,200000,200000,200000],85,110000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Terrorist"]),
-	"Zombie":BaseClasses.Creature(null,70,[190000,190000,190000,190000],75,50000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Zombie"]),
-	"Heavy":BaseClasses.Creature(null,230,[200000,200000,200000,200000],130,70000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Heavy"]),
+	"Goon":BaseClasses.Creature(null,110,BaseClasses.Inventory(),[200000,200000,200000,200000],80,110000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Goon"]),
+	"Soldier":BaseClasses.Creature(null,140,BaseClasses.Inventory(),[200000,200000,200000,200000],90,100000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Soldier"]),
+	"Terrorist":BaseClasses.Creature(null,120,BaseClasses.Inventory(),[200000,200000,200000,200000],85,110000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Terrorist"]),
+	"Zombie":BaseClasses.Creature(null,70,BaseClasses.Inventory(0,0,1,0,[],[],[getWeapon("Punch")]),[190000,190000,190000,190000],75,50000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Zombie"]),
+	"Heavy":BaseClasses.Creature(null,230,BaseClasses.Inventory(2,1),[200000,200000,200000,200000],130,70000,-90,null,Vector2(50,0),"Enemies",CreatureAppearances["Heavy"]),
 }
 
 func GetCreature(creaturekey):
