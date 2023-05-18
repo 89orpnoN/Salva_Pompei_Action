@@ -28,11 +28,24 @@ func _ready():
 		"right":[Key(40),Key(41)],
 		"shoot":[Key(50),Key(51)],
 		"reload":[Key(60)],
-		"CheckAndExecuteKey": func (KeyArr, func_to_apply):
+		"NextGun":[Key(70,isInActions,true)],
+		"CheckAndExecuteKey": func (KeyArr, func_to_apply,arguments = null):
 			for i in KeyArr:
-				if i.FunctionCheck.call(i.Value):
-					func_to_apply.call()
-					break
+					if i.FunctionCheck.call(i.Value):
+						if i.UpNDown:
+							if i.WasDown == false:
+								if arguments != null:
+									func_to_apply.callv(arguments)
+								else:
+									func_to_apply.call()
+								i.WasDown = true
+						else:
+							func_to_apply.call()
+						break
+						
+					else:
+						if i.UpNDown:
+							i.WasDown = false
 	}
 	
 	BaseClasses.Morph(self,get_node("EnemyAppearance"),creatureObject)
@@ -70,9 +83,11 @@ func _process(delta):
 
 func attackphase(delta):
 	if BaseClasses.isObjectVisible(self,Victim) and BaseClasses.inRange(creatureObject,Victim.global_position):
-		MoveDirections = Vector2()
 		PointToPoint(Victim.global_position,delta)
-		ActionsArr.append(50)
+		if creatureObject.Gun.AmmoType != null and creatureObject.Inventory[creatureObject.Gun.AmmoType][0] < 1:
+			ActionsArr.append(70)
+		else:
+			ActionsArr.append(50)
 	else:
 		Victim = GetNewVictim()
 		creatureObject.State = BaseClasses.CHASING
@@ -135,8 +150,8 @@ func CreatePath():
 	path = (-global_position+Navigator.get_next_path_position()).normalized()
 	return path
 
-func Key(KEY, functioncheck = isInActions):
-	return BaseClasses.SKey(KEY, functioncheck)
+func Key(KEY, functioncheck = isInActions, ArgsArr = null):
+	return BaseClasses.SKey(KEY, functioncheck, ArgsArr)
 
 
 
@@ -158,6 +173,7 @@ func Actions(delta):
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.right,func (): MoveDirections.x += 1*MVMForce[2])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.left,func (): MoveDirections.x += -1*MVMForce[3])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.shoot,ShootTry)
+	ActionKeys.CheckAndExecuteKey.call(ActionKeys.NextGun,BaseClasses.ChangeGun,[creatureObject,1])
 
 
 func ShootTry():

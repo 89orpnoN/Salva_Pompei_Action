@@ -107,31 +107,21 @@ func AddThingToInventory(Creature,item):
 	if item.Category == null:
 		print("item does not have category")
 		return false
-	match item.Category:
-		"Rifle":
-			if len(Inv.Rifles[0])<Inv.Rifles[1]:
-				Inv.Rifles[0].append(item)
-			else:
-				return false
-		"Pistol":
-			if len(Inv.Pistols[0])<Inv.Pistols[1]:
-				Inv.Pistols[0].append(item)
-			else:
-				return false
-		"Melee":
-			if len(Inv.Melee[0])<Inv.Melee[1]:
-				Inv.Melee[0].append(item)
-		"Item":
-			if len(Inv.Items[0])<Inv.Items[1]:
-				Inv.Items[0].append(item)
-			else:
-				return false
-		"MiscItem":
-			if len(Inv.MiscItems[0])<Inv.MiscItems[1]:
-				Inv.MiscItems[0].append(item)
-			else:
-				return false
+
+	if len(Inv[item.Category][0])<Inv[item.Category][1]:
+		Inv[item.Category][0].append(item)
+	else:
+		return false
 	return true
+
+func AddAmmoToInventory(creature,AmmoType,amount):
+	var delta = creature.Inventory.AmmoType[1]-creature.Inventory.AmmoType[0]
+	if delta < amount:
+		creature.Inventory.AmmoType[0] += delta
+	else:
+		creature.Inventory.AmmoType[0] += amount
+
+
 
 func CreatureAppearance(AnimNode,AnimFile,IdleAnim = "Idle",MeleeAnim = "Melee",ReloadAnim = "Reload",Offset = Vector2(0,0), Scale = Vector2(1,1),HitSfx = null,PainSfx = null,deathsfx = null,stepsfx = null):
 	var CreatureAppearance = {
@@ -205,10 +195,12 @@ func isObjectVisible(obj,obj2): #checks if there are nodes between first node an
 	return false
 
 
-func SKey(KEY, functioncheck): #key value paired with the function used to check if it is being pressed
+func SKey(KEY, functioncheck, UpNDown=false): #key value paired with the function used to check if it is being pressed
 	var key = {
+		"WasDown":false,
 		"Value":KEY,
 		"FunctionCheck":functioncheck,
+		"UpNDown":UpNDown,
 	}
 	return key
 	
@@ -363,7 +355,7 @@ func ChangeAnimation(creature,NewAnimation): #sets a new animation for the anima
 
 func reloadGun(creature): #reloads the gun, if it can, and makes visible and acoustic changes
 	var gun = creature.Gun
-	if not gun.IsReloading and gun.BulletsRemaining<gun.Magazine and creature.Inventory[gun.AmmoType][0]>0:
+	if not gun.IsReloading and gun.BulletsRemaining<gun.Magazine and (gun.AmmoType==null or creature.Inventory[gun.AmmoType][0]>0):
 		gun.IsReloading = true
 		ChangeAnimation(creature,"Reload")
 		if gun.SingleShotReload:

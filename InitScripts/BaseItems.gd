@@ -16,14 +16,14 @@ var GunAppearances = {
 var Weapons = {
 	"Punch":BaseClasses.Gun(null,0.33,25,1000,15,1,5,0.15,1,null,0.33,false,1,GunAppearances["Punch"],true,"Melee"),
 	"Knife":BaseClasses.Gun(null,0.24,20,1000,30,1,3,0.15,1,null,0.24,false,1,GunAppearances["Knife"],true,"Melee"),
-	"Ak-47":BaseClasses.Gun(null,0.11,26,7000,2200,8.1,7,0.11,30,"RifleAmmo",2.2,false,1,GunAppearances["Ak-47"],false,"Rifle"),
-	"M16":BaseClasses.Gun(null,0.1,22,8000,2400,7.8,6,0.09,30,"RifleAmmo",2,false,1,GunAppearances["M16"],false,"Rifle"),
-	"Deagle":BaseClasses.Gun(null,0.27,32,5500,1500,24.4,10,0.06,7,"PistolAmmo",1.7,false,1,GunAppearances["Deagle"],false,"Pistol"),
-	"Magnum":BaseClasses.Gun(null,0.46,45,5700,1800,31.5,8,0.07,6,"PistolAmmo",3.5,false,1,GunAppearances["Magnum"],false,"Pistol"),
-	"Glock":BaseClasses.Gun(null,0.19,18,6000,1450,15.1,15,0.05,17,"PistolAmmo",2.1,false,1,GunAppearances["Glock"],false,"Pistol"),
-	"M1911":BaseClasses.Gun(null,0.24,24,5900,1450,17.2,13,0.06,8,"PistolAmmo",2.1,false,1,GunAppearances["M1911"],false,"Pistol"),
-	"Itaca":BaseClasses.Gun(null,0.86,15,5200,1400,32.7,20,0.04,6,"BuckshotAmmo",3.5,true,8,GunAppearances["Itaca"],false,"Rifle"),
-	"Spas":BaseClasses.Gun(null,0.26,13,5200,1400,30.1,24,0.06,5,"BuckshotAmmo",3.5,true,8,GunAppearances["Spas"],false,"Rifle"),
+	"Ak-47":BaseClasses.Gun(null,0.11,26,7000,2200,8.1,7,0.11,30,"RifleAmmo",2.2,false,1,GunAppearances["Ak-47"],false,"Rifles"),
+	"M16":BaseClasses.Gun(null,0.1,22,8000,2400,7.8,6,0.09,30,"RifleAmmo",2,false,1,GunAppearances["M16"],false,"Rifles"),
+	"Deagle":BaseClasses.Gun(null,0.27,32,5500,1500,24.4,10,0.06,7,"PistolAmmo",1.7,false,1,GunAppearances["Deagle"],false,"Pistols"),
+	"Magnum":BaseClasses.Gun(null,0.46,45,5700,1800,31.5,8,0.07,6,"PistolAmmo",3.5,false,1,GunAppearances["Magnum"],false,"Pistols"),
+	"Glock":BaseClasses.Gun(null,0.19,18,6000,1450,15.1,15,0.05,17,"PistolAmmo",2.1,false,1,GunAppearances["Glock"],false,"Pistols"),
+	"M1911":BaseClasses.Gun(null,0.24,24,5900,1450,17.2,13,0.06,8,"PistolAmmo",2.1,false,1,GunAppearances["M1911"],false,"Pistols"),
+	"Itaca":BaseClasses.Gun(null,0.86,15,5200,1400,32.7,20,0.04,6,"BuckshotAmmo",3.5,true,8,GunAppearances["Itaca"],false,"Rifles"),
+	"Spas":BaseClasses.Gun(null,0.26,13,5200,1400,30.1,24,0.06,5,"BuckshotAmmo",3.5,true,8,GunAppearances["Spas"],false,"Rifles"),
 }
 
 func getWeapon(key):
