@@ -22,7 +22,7 @@ func GunAppearance(Sprite = null,DropSprite = null, BuySprite=null,KillSprite=nu
 	return gunAppearance.duplicate()
 
 
-func Gun(gunnode = null,bulletwait = 1,damage = 1,speed = 10000 ,maxdistance = 10000,Recoil = 1,basespread = 5,spreadmultiplier = 0.1, Magazine=30, ReloadWait = 1,SingleShotReload = false,bulletamount = 1, gunappearance = GunAppearance(),IsMelee=false,Category="Rifle", OnShoot = ShootProjectile, OnShootParams = []):
+func Gun(gunnode = null,bulletwait = 1,damage = 1,speed = 10000 ,maxdistance = 10000,Recoil = 1,basespread = 5,spreadmultiplier = 0.1, Magazine=30,AmmoType ="RifleAmmo" ,ReloadWait = 1,SingleShotReload = false,bulletamount = 1, gunappearance = GunAppearance(),IsMelee=false,Category="Rifle", OnShoot = ShootProjectile, OnShootParams = []):
 	var gun = {
 	"GunNode":gunnode,
 	"CanFire":true,
@@ -38,6 +38,7 @@ func Gun(gunnode = null,bulletwait = 1,damage = 1,speed = 10000 ,maxdistance = 1
 	"BaseSpread":basespread,  #expressed in degrees
 	"SpreadMultiplier":spreadmultiplier,
 	"Magazine":Magazine,
+	"AmmoType":AmmoType,
 	"ReloadWait":ReloadWait,
 	"SingleShotReload":SingleShotReload,
 	"BulletAmount":bulletamount,
@@ -77,13 +78,16 @@ func ChangeGun(creature,Idx): #can be called if the gun and the creature have be
 	await sleep(TrueReloadWait)
 	Newgun.CanFire = true
 
-func Inventory(RifleLimit = 1, PistolLimit= 1,MeleeLimit=2 ,ItemLimit = 2,Rifles = [],Pistols = [],Melees=[],Items=[],MiscItems=[],Armor = null):
+func Inventory(RifleLimit = 1, PistolLimit= 1,MeleeLimit=2 ,ItemLimit = 2,BigAmmoLimit = 240,SmallAmmoLimit = 120,BuckAmmoLimit = 70,Rifles = [],Pistols = [],Melees=[],Items=[],MiscItems=[],Armor = null , BigAmmo = 40, SmallAmmo = 24, BuckshotAmmo = 15):
 	var inventory = {
 		"Rifles":[Rifles,RifleLimit],
 		"Pistols":[Pistols,PistolLimit],
 		"Melee":[Melees,MeleeLimit],
 		"Items":[Items,ItemLimit],
 		"Armor":Armor,
+		"RifleAmmo":[BigAmmo,BigAmmoLimit],
+		"PistolAmmo":[SmallAmmo,SmallAmmoLimit],
+		"ShotgunAmmo":[BuckshotAmmo,BuckAmmoLimit],
 		"MiscItems":[MiscItems,-1],
 		"Equipped":[],
 	}
@@ -234,11 +238,18 @@ func UpdateEveryX(secs,instance,function,arguments = null): #function that cycle
 	while instance !=null:
 		
 		if arguments != null:
-			function.call(arguments)
+			function.callv(arguments)
 		else:
 			function.call()
 		await sleep(secs)
 
+func DoAfterX(instance,time,function,arguments = null):
+	await BaseClasses.sleep(time)
+	if instance != null:
+		if arguments != null:
+			function.callv(arguments)
+		else:
+			function.call()
 
 func arrayAt(arr,idx): #gets the item in the array even if it's out of range
 	if idx >= len(arr):
@@ -286,7 +297,7 @@ func ShootProjectile(creature): #function that triggers each time a creature tri
 	if gun.CanFire:
 		if not gun.IsReloading:
 			if gun.BulletsRemaining > 0:
-				if gun.Range < MeleeMaxRange:
+				if gun.IsMelee:
 					meleeAnim(creature)
 					reloadGun(creature)
 				gun.CanFire = false
@@ -352,25 +363,36 @@ func ChangeAnimation(creature,NewAnimation): #sets a new animation for the anima
 
 func reloadGun(creature): #reloads the gun, if it can, and makes visible and acoustic changes
 	var gun = creature.Gun
-	if not gun.IsReloading and gun.BulletsRemaining<gun.Magazine:
+	if not gun.IsReloading and gun.BulletsRemaining<gun.Magazine and creature.Inventory[gun.AmmoType][0]>0:
 		gun.IsReloading = true
 		ChangeAnimation(creature,"Reload")
 		if gun.SingleShotReload:
 			print(gun.BulletsRemaining)
-			while not gun.InterruptReload and gun.BulletsRemaining<gun.Magazine:
+			while not gun.InterruptReload and gun.BulletsRemaining<gun.Magazine and creature.Inventory[gun.AmmoType][0]>0:
 				print(gun.InterruptReload)
 				PlaySound(gun.GunNode,gun.gunAppearance.ReloadSFX)
 				await sleep(gun.ReloadWait/gun.Magazine)
 				if not gun.InterruptReload or gun.BulletsRemaining==0:
 					gun.BulletsRemaining += 1
+					if gun.AmmoType != null:
+						creature.Inventory[gun.AmmoType][0]-=1
 					print(gun.BulletsRemaining)
-				
+					
 		else:
 			PlaySound(gun.GunNode,gun.gunAppearance.ReloadSFX)
 			print(gun.BulletsRemaining)
 			await sleep(gun.ReloadWait)
-			gun.BulletsRemaining = gun.Magazine
-			print(gun.BulletsRemaining)
+			if gun.AmmoType != null:
+				var deltabul = gun.Magazine - gun.BulletsRemaining
+				if deltabul>creature.Inventory[gun.AmmoType][0]:
+					gun.BulletsRemaining += creature.Inventory[gun.AmmoType][0]
+					creature.Inventory[gun.AmmoType][0] = 0
+				else:
+					gun.BulletsRemaining = gun.Magazine
+					creature.Inventory[gun.AmmoType][0] -= deltabul
+				print(gun.BulletsRemaining)
+			else:
+				gun.BulletsRemaining = gun.Magazine
 		gun.IsReloading = false
 		ChangeAnimation(creature,"Idle")
 		gun.InterruptReload = false

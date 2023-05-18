@@ -15,6 +15,7 @@ var path = Array()
 var MoveDirections = Vector2()
 var damageTaken = false
 var LastFrameHP
+var reactionTime = 0.4
 
 func _ready():
 	set_lock_rotation_enabled(false)
@@ -69,6 +70,7 @@ func _process(delta):
 
 func attackphase(delta):
 	if BaseClasses.isObjectVisible(self,Victim) and BaseClasses.inRange(creatureObject,Victim.global_position):
+		MoveDirections = Vector2()
 		PointToPoint(Victim.global_position,delta)
 		ActionsArr.append(50)
 	else:
@@ -94,8 +96,9 @@ func chasephase(delta):
 			if BaseClasses.inRange(creatureObject,Victim.global_position):
 				if global_position.distance_to(optimalPoint) > 5:
 					MoveDirections = ((optimalPoint-global_position).floor() ).normalized()
-					attackphase(delta)
-					creatureObject.State = BaseClasses.ATTACKING
+					if creatureObject.Gun.IsMelee:
+						attackphase(delta)
+					BaseClasses.DoAfterX(self,reactionTime, func (): creatureObject.State = BaseClasses.ATTACKING)
 					MoveDirections = Vector2()
 			else:
 				MoveDirections = CreatePath()
@@ -117,12 +120,13 @@ func sleepPhase(delta):
 			var result = space_state.intersect_ray(query)
 			if result:
 				if result.collider == i:
-					creatureObject.State = BaseClasses.CHASING
+					
+					BaseClasses.DoAfterX(self,reactionTime, func (): creatureObject.State = BaseClasses.CHASING)
 					Victim = i
 					break
 	if damageTaken:
 		Victim = get_closest_node(Enemies)
-		creatureObject.State = BaseClasses.CHASING
+		BaseClasses.DoAfterX(self,reactionTime, func (): creatureObject.State = BaseClasses.CHASING)
 				
 
 		
