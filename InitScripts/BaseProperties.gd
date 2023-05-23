@@ -140,6 +140,12 @@ func CreatureAppearance(AnimNode,AnimFile,IdleAnim = "Idle",MeleeAnim = "Melee",
 	}	
 	return CreatureAppearance.duplicate()
 
+func GroundObject(Item,groundSprite,pickupsfx = null):
+	var groundobject = {
+		"Item":Item,
+		"GroundSprite":groundSprite,
+		"PickupSFX":pickupsfx,
+	}
 
 func Creature(target,health = 100,inventory = Inventory(),movementforce = [250000,250000,250000,250000],mass = 100,turnforce =100000,rotationoffset=0,gun = null,projectileoffset = Vector2(50,0),team = "None",CreatureAppearance = null):
 	var creature = {

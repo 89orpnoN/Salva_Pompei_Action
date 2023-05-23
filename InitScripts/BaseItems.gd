@@ -52,6 +52,18 @@ func GetCreature(creaturekey):
 
 
 
+var GroundObj = {
+	"Knife":BaseClasses.GroundObject(getWeapon("Knife"),load("res://Sprites/Guns/Yates/knife_d.png")),
+	"Ak-47":BaseClasses.GroundObject(getWeapon("Ak-47"),load("res://Sprites/Guns/Memeoji/ak47_d.png")),
+	"M16":BaseClasses.GroundObject(getWeapon("M16"),load("res://Sprites/Guns/Captione/m4a1_d.png")),
+	"Deagle":BaseClasses.GroundObject(getWeapon("Deagle"),load("res://Sprites/Guns/Axel340/deagle_d.png")),
+	"Magnum":BaseClasses.GroundObject(getWeapon("Magnum"),load("res://Sprites/Guns/EquinoX/44magnum_d.bmp")),
+	"Glock":BaseClasses.GroundObject(getWeapon("Glock"),load("res://Sprites/Guns/Axel340/glock_d.png")),
+	"M1911":BaseClasses.GroundObject(getWeapon("M1911"),load("res://Sprites/Guns/bamg/m1911_d.png")),
+	"Itaca":BaseClasses.GroundObject(getWeapon("Itaca"),load("res://Sprites/Guns/M5H4cK/m3_d.png")),
+	"Spas":BaseClasses.GroundObject(getWeapon("Spas"),load("res://Sprites/Guns/Captione/spas_d.png")),
+}
+
 var Props = {
 	"Box":BaseClasses.Creature(null,60,null,30,null,null,null,null,"Boxes",null),
 }
