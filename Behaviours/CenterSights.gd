@@ -26,7 +26,7 @@ func _process(delta):
 	var velocity = parent.get_linear_velocity()
 	var actualVelocity = sqrt(velocity.x**2+velocity.y**2)
 	var dist = deltapos*(BaseClasses.MaxBulletSpread(parent.creatureObject)/90)
-	var position = Vector2()
+	position = Vector2()
 	children[0].position = Vector2(-dist,-dist)
 	children[1].position = Vector2(-dist,dist)
 	children[2].position = Vector2(dist,dist)

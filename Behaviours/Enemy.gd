@@ -19,7 +19,6 @@ var reactionTime = 0.4
 
 func _ready():
 	set_lock_rotation_enabled(false)
-	
 	Navigator = get_node("PathMaker")
 	ActionKeys = {
 		"forward":[Key(10),Key(11)],
@@ -48,8 +47,6 @@ func _ready():
 							i.WasDown = false
 	}
 	
-	BaseClasses.Morph(self,get_node("EnemyAppearance"),creatureObject)
-	BaseClasses.EquipGun(creatureObject,creatureObject.Gun,self,get_node("EnemyAppearance/Gun"))
 	MVMForce = creatureObject.MovementForce
 	Enemies = BaseClasses.get_nodes_with_groups(BaseItems.ActiveTeams,[creatureObject.Team])
 	BaseClasses.UpdateEveryX(1,self,func (): Enemies = BaseClasses.get_nodes_with_groups(BaseItems.ActiveTeams,[creatureObject.Team]))
@@ -63,8 +60,8 @@ func _process(delta):
 		damageTaken = true
 	LastFrameHP = creatureObject.Health
 	BaseClasses.Stepping(creatureObject)
-	if creatureObject.Health <= 0:
-		queue_free()
+	if creatureObject.Health.Health <= 0:
+		Die()
 	
 	if Victim != null and self !=null:
 		ActionsArr = []
@@ -80,6 +77,31 @@ func _process(delta):
 	else:
 		Victim = get_closest_node(Enemies)
 	BaseClasses.DissipateRecoil(delta,creatureObject.Gun)
+
+
+func Die():
+	var rating = BaseClasses.MenaceRating(creatureObject)
+	bloodPuddle()
+	randomDrops(rating)
+
+	queue_free()
+
+func bloodPuddle():
+	var blood = Sprite2D.new()
+	blood.global_position = global_position
+	blood.scale = Vector2(0.1,0.1)
+	blood.texture = load("res://Sprites/DeathReactions/Blood splatter.png")
+	get_node("/root").add_child(blood)
+
+func randomDrops(rating):
+	var random = randi_range(0,100)
+	rating = (rating/10) + 5
+	if random/3 <= rating:
+		if creatureObject.Gun.AmmoType != null:
+			BaseClasses.SpawnGroundObj(get_node("/root"),global_position,BaseClasses.AmmopackInit(BaseItems.GetGroundObj(creatureObject.Gun.AmmoType),round(rating)),load("res://Behaviours/AmmoGroundObject.gd"))
+	if random <= rating:
+		var dropitem = BaseClasses.arrayAt(BaseClasses.GetAllThings(creatureObject),random)
+		BaseClasses.DropGun(creatureObject,dropitem)
 
 func attackphase(delta):
 	if BaseClasses.isObjectVisible(self,Victim) and BaseClasses.inRange(creatureObject,Victim.global_position):

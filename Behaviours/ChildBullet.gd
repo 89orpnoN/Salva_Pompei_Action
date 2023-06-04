@@ -20,13 +20,12 @@ func _physics_process(delta):
 	var collision = move_and_collide(speed * delta)
 	if collision:
 		body = collision.get_collider()
-		var a = get_groups()
 		if not "creatureObject" in body:
 			BaseClasses.PlaySound(body,genericHitSound)
 			queue_free()
 		else:
 			if not team == body.creatureObject.Team:
-				body.creatureObject.Health -= damage
+				BaseClasses.ScaleHealth(body.creatureObject.Health,damage)
 				if body.creatureObject.CreatureAppearance != null:
 					BaseClasses.PlaySound(body,body.creatureObject.CreatureAppearance.HitSfx)
 				else:

@@ -1,12 +1,11 @@
-extends RigidBody2D
+extends Camera2D
 
-var creatureObject
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	creatureObject = BaseItems.GetProp("Box")
+	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if creatureObject.Health.Health <= 0:
-		queue_free()
+	global_rotation = deg_to_rad(0)

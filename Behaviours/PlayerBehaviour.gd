@@ -21,7 +21,7 @@ func Key(KEY, functioncheck = Input.is_key_pressed, UpNDown=false):
 	return key
 
 func _ready():
-	Inventory = [BaseItems.getWeapon("Punch"),BaseItems.getWeapon("Knife"),BaseItems.getWeapon("Ak-47"),BaseItems.getWeapon("Magnum")]
+	Inventory = [BaseItems.getWeapon("Punch"),BaseItems.getWeapon("Knife"),BaseItems.getWeapon("Magnum"),BaseItems.getWeapon("Adrenaline")]
 	LastFootstep = [global_position,false]
 	ActionKeys = {
 		"forward":[Key(KEY_W),Key(KEY_UP)],
@@ -29,6 +29,7 @@ func _ready():
 		"left":[Key(KEY_A),Key(KEY_LEFT)],
 		"right":[Key(KEY_D),Key(KEY_RIGHT)],
 		"walk":[Key(KEY_SHIFT),Key(KEY_CTRL)],
+		"drop":[Key(KEY_G,Input.is_key_pressed,true)],
 		"reload":[Key(KEY_R)],
 		"shoot":[Key(MOUSE_BUTTON_LEFT,Input.is_mouse_button_pressed),Key(KEY_ALT)],
 		"NextGun":[Key(KEY_2,Input.is_key_pressed,true)],
@@ -49,22 +50,28 @@ func _ready():
 						
 					else:
 						if i.UpNDown:
-							i.WasDown = false
+							i.WasDown = false,
 				
 	}
-	
-	BaseClasses.Morph(self,get_node("PlayerAppearance"),BaseItems.GetCreature("Soldier"),"Police")
+	var Creature = BaseItems.GetCreature("Soldier")
+	Creature.Health = BaseItems.GetCreatureHealth("PlayerSoldier")
+	BaseClasses.Morph(self,get_node("PlayerAppearance"),Creature,"Police")
 	BaseClasses.AddThingsToInventory(creatureObject,Inventory)
 	BaseClasses.EquipGun(creatureObject,BaseClasses.arrayAt(BaseClasses.GetAllThings(creatureObject),0),self,get_node("PlayerAppearance/Gun"))
 	LastFrameHP = creatureObject.Health
-	
+	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(-360,-60),BaseItems.GetGroundObj("Adrenaline"),load("res://Behaviours/HealthPackGroundObject.gd"))
+	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(-360,-60),BaseItems.GetGroundObj("Medkit"),load("res://Behaviours/HealthPackGroundObject.gd"))
+	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(-60,-60),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("BuckshotAmmo"),7),load("res://Behaviours/AmmoGroundObject.gd"))
+	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(30,30),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("RifleAmmo"),30),load("res://Behaviours/AmmoGroundObject.gd"))
+	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(-30,-30),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("PistolAmmo"),30),load("res://Behaviours/AmmoGroundObject.gd"))
+	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(0,0),BaseItems.GetGroundObj("M16"),load("res://Behaviours/GunGroundObject.gd"))
 
 		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 
 		
-	if creatureObject.Health <= 0:
+	if creatureObject.Health.Health <= 0:
 		queue_free()
 		print("dead")
 	
@@ -88,6 +95,7 @@ func Actions(delta):
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.reload,ReloadTry)
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.PreviousGun,BaseClasses.ChangeGun,[creatureObject,-1])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.NextGun,BaseClasses.ChangeGun,[creatureObject,1])
+	ActionKeys.CheckAndExecuteKey.call(ActionKeys.drop,BaseClasses.DropGun,[creatureObject,creatureObject.Gun])
 
 
 
@@ -95,7 +103,7 @@ func ShootTry():
 	creatureObject.Gun.OnShoot.callv(creatureObject.Gun.OnShootParams)
 
 func ReloadTry():
-	BaseClasses.reloadGun(creatureObject)
+	creatureObject.Gun.OnReload.callv(creatureObject.Gun.OnReloadParams)
 
 func PointToPoint(pos,delta):
 	var look_dir = pos - global_position
