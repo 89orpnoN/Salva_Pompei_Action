@@ -22,6 +22,12 @@ func GunAppearance(Sprite = null,DropSprite = null, BuySprite=null,KillSprite=nu
 	}
 	return gunAppearance.duplicate()
 
+func BuyArea(Baseprice = 1):
+	var buyarea = {
+		"Enabled":true, 
+		"Baseprice":Baseprice,
+	}
+	return buyarea
 
 func Gun(gunnode = null,Name = "Punch",bulletwait = 1.0,damage = 1.0,speed = 10000.0 ,maxdistance = 10000.0,Recoil = 1.0,basespread = 5.0,spreadmultiplier = 0.1, Magazine=30.0,AmmoType ="RifleAmmo" ,ReloadWait = 1.0,SingleShotReload = false,bulletamount = 1.0, gunappearance = GunAppearance(),IsMelee=false,Category="Rifle", OnShoot = ShootProjectile, OnShootParams = [],OnReload = reloadGun,OnReloadParams = []):
 	var gun = {
@@ -632,4 +638,20 @@ func MenaceRating(Creature):
 	Points += HealthPoints+GunPoints
 	return Points
 	
-	
+func CreateBuyArea(scene,areaobject,size,coords):
+		var sprt = Sprite2D.new()
+		var shape = CollisionShape2D.new()
+		var rectangleshape =  RectangleShape2D.new()
+		var area = Area2D.new()
+		sprt.z_index = 3
+		rectangleshape.size = size
+		shape.shape = rectangleshape
+		sprt.texture = load("inserire sprite di sfondo dei negozi")
+		area.set_script(load("inserire script dei negozi"))
+		area.AreaObject = areaobject
+		area.area = shape
+		area.global_position = coords
+		area.global_rotation = randf_range(-PI,PI)
+		area.add_child(shape)
+		area.add_child(sprt)
+		scene.add_child(area)
