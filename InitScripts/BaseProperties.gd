@@ -27,7 +27,7 @@ func BuyArea(Baseprice = 1):
 		"Enabled":true, 
 		"Baseprice":Baseprice,
 	}
-	return buyarea
+	return buyarea.duplicate(true)
 
 func Gun(gunnode = null,Name = "Punch",bulletwait = 1.0,damage = 1.0,speed = 10000.0 ,maxdistance = 10000.0,Recoil = 1.0,basespread = 5.0,spreadmultiplier = 0.1, Magazine=30.0,AmmoType ="RifleAmmo" ,ReloadWait = 1.0,SingleShotReload = false,bulletamount = 1.0, gunappearance = GunAppearance(),IsMelee=false,Category="Rifle", OnShoot = ShootProjectile, OnShootParams = [],OnReload = reloadGun,OnReloadParams = []):
 	var gun = {
@@ -176,7 +176,7 @@ func SpawnGroundObj(Scene,Coords,GroundObj,Behaviour):
 		area.global_rotation = randf_range(-PI,PI)
 		area.add_child(shape)
 		area.add_child(sprt)
-		Scene.add_child(area)
+		Scene.add_child.call_deferred(area)
 
 func DeleteGun(creature,Deletegun):
 	var gun = creature.Gun
@@ -418,12 +418,16 @@ func get_nodes_with_groups(groups,ExcludedGroups = null): #get all nodes that ha
 
 
 func UpdateEveryX(secs,instance,function,arguments = null): #function that cycles forever if the instance exists and calls the function at regular intervals
+	var a
 	while instance !=null:
 		
 		if arguments != null:
-			function.callv(arguments)
+			a = function.callv(arguments)
+			
 		else:
-			function.call()
+			a = function.call()
+		if typeof(a) == TYPE_BOOL and !a:
+			return
 		await sleep(secs)
 		
 func UpdateEveryXthenStop(secs,stopSecs,instance,function,arguments = null): #function that cycles forever if the instance exists and calls the function at regular intervals
@@ -646,12 +650,48 @@ func CreateBuyArea(scene,areaobject,size,coords):
 		sprt.z_index = 3
 		rectangleshape.size = size
 		shape.shape = rectangleshape
-		sprt.texture = load("inserire sprite di sfondo dei negozi")
-		area.set_script(load("inserire script dei negozi"))
+		#sprt.texture = load("inserire sprite di sfondo dei negozi")
+		area.set_script(load("res://Behaviours/BuyArea.gd"))
 		area.AreaObject = areaobject
-		area.area = shape
 		area.global_position = coords
 		area.global_rotation = randf_range(-PI,PI)
+		area.add_to_group("BuyArea")
 		area.add_child(shape)
 		area.add_child(sprt)
-		scene.add_child(area)
+		scene.add_child.call_deferred(area)
+
+func ShopGunObject(Name,DisplayName,Price,Sprite,Gun,GroundObject):
+	var shopgunobject = {
+		"Name":Name,
+		"DisplayName":DisplayName,
+		"Price":Price,
+		"Sprite":Sprite,
+		"Gun":Gun,
+		"GroundObject":GroundObject,
+	}
+	return shopgunobject.duplicate(true)
+
+func IsInActiveBuyArea(playerNode):
+	var buyareas = get_tree().get_nodes_in_group("BuyArea")
+	for i in buyareas:
+		if i.tryOpen(playerNode):
+			return true
+	return false
+		
+func SwitchOpenBuyMenu(root,playerNode):
+	pass
+
+func OpenBuyMenu(root,playerNode):
+	if IsInActiveBuyArea(playerNode):
+		
+		print("pollo")
+		var shopmenu = root.get_node("ShopMenu")
+		shopmenu.get_parent().remove_child(shopmenu)
+		playerNode.get_node("MainCamera").add_child(shopmenu)
+		shopmenu.global_position = playerNode.global_position
+
+func CloseBuyMenu(root,playerNode):
+	var shopmenu = get_node("/ShopMenu")
+	playerNode.get_node("MainCamera").remove_child(shopmenu)
+	root.add_child(shopmenu)
+	shopmenu.global_position = GarbageCoords

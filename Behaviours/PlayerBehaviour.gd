@@ -9,6 +9,7 @@ var Inventory
 var damageTaken = false 
 var LastFrameHP
 var LastFootstep
+var root 
 # Called when the node enters the scene tree for the first time.
 
 func Key(KEY, functioncheck = Input.is_key_pressed, UpNDown=false):
@@ -21,6 +22,7 @@ func Key(KEY, functioncheck = Input.is_key_pressed, UpNDown=false):
 	return key
 
 func _ready():
+	root = get_node("/root/World/")
 	Inventory = [BaseItems.getWeapon("Punch"),BaseItems.getWeapon("Knife"),BaseItems.getWeapon("Magnum"),BaseItems.getWeapon("Adrenaline")]
 	LastFootstep = [global_position,false]
 	ActionKeys = {
@@ -34,6 +36,7 @@ func _ready():
 		"shoot":[Key(MOUSE_BUTTON_LEFT,Input.is_mouse_button_pressed),Key(KEY_ALT)],
 		"NextGun":[Key(KEY_2,Input.is_key_pressed,true)],
 		"PreviousGun":[Key(KEY_1,Input.is_key_pressed,true)],
+		"OpenBuyMenu":[Key(KEY_B,Input.is_key_pressed,true)],
 		"CheckAndExecuteKey": func (KeyArr, func_to_apply,arguments = null):
 				for i in KeyArr:
 					if i.FunctionCheck.call(i.Value):
@@ -59,13 +62,13 @@ func _ready():
 	BaseClasses.AddThingsToInventory(creatureObject,Inventory)
 	BaseClasses.EquipGun(creatureObject,BaseClasses.arrayAt(BaseClasses.GetAllThings(creatureObject),0),self,get_node("PlayerAppearance/Gun"))
 	LastFrameHP = creatureObject.Health
-	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(-360,-60),BaseItems.GetGroundObj("Adrenaline"),load("res://Behaviours/HealthPackGroundObject.gd"))
-	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(-360,-60),BaseItems.GetGroundObj("Medkit"),load("res://Behaviours/HealthPackGroundObject.gd"))
-	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(-60,-60),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("BuckshotAmmo"),7),load("res://Behaviours/AmmoGroundObject.gd"))
-	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(30,30),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("RifleAmmo"),30),load("res://Behaviours/AmmoGroundObject.gd"))
-	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(-30,-30),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("PistolAmmo"),30),load("res://Behaviours/AmmoGroundObject.gd"))
-	BaseClasses.SpawnGroundObj(get_node("/root"),Vector2(0,0),BaseItems.GetGroundObj("M16"),load("res://Behaviours/GunGroundObject.gd"))
-
+	BaseClasses.SpawnGroundObj(root,Vector2(-360,-60),BaseItems.GetGroundObj("Adrenaline"),load("res://Behaviours/HealthPackGroundObject.gd"))
+	BaseClasses.SpawnGroundObj(root,Vector2(-360,-60),BaseItems.GetGroundObj("Medkit"),load("res://Behaviours/HealthPackGroundObject.gd"))
+	BaseClasses.SpawnGroundObj(root,Vector2(-60,-60),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("BuckshotAmmo"),7),load("res://Behaviours/AmmoGroundObject.gd"))
+	BaseClasses.SpawnGroundObj(root,Vector2(30,30),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("RifleAmmo"),30),load("res://Behaviours/AmmoGroundObject.gd"))
+	BaseClasses.SpawnGroundObj(root,Vector2(-30,-30),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("PistolAmmo"),30),load("res://Behaviours/AmmoGroundObject.gd"))
+	BaseClasses.SpawnGroundObj(root,Vector2(0,0),BaseItems.GetGroundObj("M16"),load("res://Behaviours/GunGroundObject.gd"))
+	BaseClasses.CreateBuyArea(root,BaseClasses.BuyArea(),Vector2(1000,1000),Vector2(-200,-200))
 		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -96,6 +99,7 @@ func Actions(delta):
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.PreviousGun,BaseClasses.ChangeGun,[creatureObject,-1])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.NextGun,BaseClasses.ChangeGun,[creatureObject,1])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.drop,BaseClasses.DropGun,[creatureObject,creatureObject.Gun])
+	ActionKeys.CheckAndExecuteKey.call(ActionKeys.OpenBuyMenu,BaseClasses.OpenBuyMenu,[root,self])
 
 
 

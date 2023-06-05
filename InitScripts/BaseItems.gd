@@ -18,8 +18,8 @@ var GunAppearances = {
 
 
 var Weapons = {
-	"Punch":BaseClasses.Gun(null,"Punch",0.33,25,1000,30,1,5,0.15,1,null,0.33,false,1,GunAppearances["Punch"],true,"Melee"),
-	"Knife":BaseClasses.Gun(null,"Knife",0.24,20,1000,30,1,3,0.15,1,null,0.24,false,1,GunAppearances["Knife"],true,"Melee"),
+	"Punch":BaseClasses.Gun(null,"Punch",0.33,25,1000,50,1,5,0.15,1,null,0.33,false,1,GunAppearances["Punch"],true,"Melee"),
+	"Knife":BaseClasses.Gun(null,"Knife",0.24,20,1000,50,1,3,0.15,1,null,0.24,false,1,GunAppearances["Knife"],true,"Melee"),
 	"Ak-47":BaseClasses.Gun(null,"Ak-47",0.11,26,7000,2200,8.1,7,0.11,30,"RifleAmmo",2.2,false,1,GunAppearances["Ak-47"],false,"Rifles"),
 	"M16":BaseClasses.Gun(null,"M16",0.1,22,8000,2400,7.8,6,0.09,30,"RifleAmmo",2,false,1,GunAppearances["M16"],false,"Rifles"),
 	"Deagle":BaseClasses.Gun(null,"Deagle",0.27,32,5500,1500,24.4,10,0.06,7,"PistolAmmo",1.7,false,1,GunAppearances["Deagle"],false,"Pistols"),
@@ -35,7 +35,8 @@ var Weapons = {
 func getWeapon(key):
 	return Weapons[key].duplicate(true)
 
-
+func getWeapons():
+	return Weapons.duplicate(true)
 
 var CreatureAppearances = {
 	"Goon":BaseClasses.CreatureAppearance(null,load("res://Sprites/Creatures/Goon/Idle.tres"),"Idle","Melee","Reload",Vector2(0,0),Vector2(3,3),load("res://SFX/Human/Hit.wav"),null,null,[load("res://SFX/Human/Footstep_L.mp3"),load("res://SFX/Human/Footstep_R.mp3")]),
@@ -89,9 +90,9 @@ var GroundObj = {
 	"M1911":BaseClasses.GroundObject(getWeapon("M1911"),load("res://Sprites/Guns/bamg/m1911_d.png"),load("res://SFX/ItemEquip/Item Pickup.mp3"),Vector2(3,3),load("res://Behaviours/GunGroundObject.gd")),
 	"Itaca":BaseClasses.GroundObject(getWeapon("Itaca"),load("res://Sprites/Guns/M5H4cK/m3_d.png"),load("res://SFX/ItemEquip/Item Pickup.mp3"),Vector2(3,3),load("res://Behaviours/GunGroundObject.gd")),
 	"Spas":BaseClasses.GroundObject(getWeapon("Spas"),load("res://Sprites/Guns/Captione/spas_d.png"),load("res://SFX/ItemEquip/Item Pickup.mp3"),Vector2(3,3),load("res://Behaviours/GunGroundObject.gd")),
-	"PistolAmmo":BaseClasses.GroundObject(BaseClasses.AmmoPack("PistolAmmo"),load("res://Sprites/Ammopacks/PistolAmmo.png"),load("res://SFX/ItemEquip/Item Pickup.mp3"),Vector2(1,1),load("res://Behaviours/AmmoGroundObject.gd")), 
-	"RifleAmmo":BaseClasses.GroundObject(BaseClasses.AmmoPack("RifleAmmo"),load("res://Sprites/Ammopacks/RifleAmmo.png"),load("res://SFX/ItemEquip/Item Pickup.mp3"),Vector2(1,1),load("res://Behaviours/AmmoGroundObject.gd")),
-	"BuckshotAmmo":BaseClasses.GroundObject(BaseClasses.AmmoPack("BuckshotAmmo"),load("res://Sprites/Ammopacks/BuckshotAmmo.png"),load("res://SFX/ItemEquip/Item Pickup.mp3"),Vector2(1,1),load("res://Behaviours/AmmoGroundObject.gd")),
+	"PistolAmmo":BaseClasses.GroundObject(BaseClasses.AmmopackInit(BaseClasses.AmmoPack("PistolAmmo"),30),load("res://Sprites/Ammopacks/PistolAmmo.png"),load("res://SFX/ItemEquip/Item Pickup.mp3"),Vector2(1,1),load("res://Behaviours/AmmoGroundObject.gd")), 
+	"RifleAmmo":BaseClasses.GroundObject(BaseClasses.AmmopackInit(BaseClasses.AmmoPack("RifleAmmo"),30),load("res://Sprites/Ammopacks/RifleAmmo.png"),load("res://SFX/ItemEquip/Item Pickup.mp3"),Vector2(1,1),load("res://Behaviours/AmmoGroundObject.gd")),
+	"BuckshotAmmo":BaseClasses.GroundObject(BaseClasses.AmmopackInit(BaseClasses.AmmoPack("BuckshotAmmo"),15),load("res://Sprites/Ammopacks/BuckshotAmmo.png"),load("res://SFX/ItemEquip/Item Pickup.mp3"),Vector2(1,1),load("res://Behaviours/AmmoGroundObject.gd")),
 	"Adrenaline":BaseClasses.GroundObject(BaseClasses.HealthPack(120,2,true),load("res://Sprites/HealthPacks/Adrenaline.png"),load("res://SFX/HealingPacks/Adrenaline Shot.mp3"),Vector2(2,2),load("res://Behaviours/HealthPackGroundObject.gd")),
 	"Medkit":BaseClasses.GroundObject(BaseClasses.HealthPack(200,0,false),load("res://Sprites/HealthPacks/MedPack.png"),load("res://SFX/HealingPacks/Medkit.mp3"),Vector2(1,1),load("res://Behaviours/HealthPackGroundObject.gd")),
 	"MedPack":BaseClasses.GroundObject(BaseClasses.HealthPack(100,0,false),load("res://Sprites/HealthPacks/MedPack.png"),load("res://SFX/HealingPacks/Medkit.mp3"),Vector2(0.7,0.7),load("res://Behaviours/HealthPackGroundObject.gd")),
@@ -107,6 +108,9 @@ func GetGroundObj(key):
 		print("GroundObj null does not exist")
 		return false
 
+func GetGroundObjects():
+	return GroundObj.duplicate(true)
+
 var Props = {
 	"Box":BaseClasses.Creature(null,BaseClasses.Health(0,0,0,0,0,3,100,0),null,30,null,null,null,null,"Boxes",null),
 }
@@ -118,6 +122,29 @@ func GetProp(key):
 		print("Props " + key + " does not exist")
 		return false
 
+var ShopGunObject = {
+	"Knife":BaseClasses.ShopGunObject("Knife","Knife",500,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Knife"),GetGroundObj("Knife")),
+	"Ak-47":BaseClasses.ShopGunObject("Ak-47","Ak-47",5300,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Ak-47"),GetGroundObj("Ak-47")),
+	"M16":BaseClasses.ShopGunObject("M16","M16",5600,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("M16"),GetGroundObj("M16")),
+	"Deagle":BaseClasses.ShopGunObject("Deagle","Deagle",1800,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Deagle"),GetGroundObj("Deagle")),
+	"Magnum":BaseClasses.ShopGunObject("Magnum","Magnum",2500,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Magnum"),GetGroundObj("Magnum")),
+	"Glock":BaseClasses.ShopGunObject("Glock","Glock",1400,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Glock"),GetGroundObj("Glock")),
+	"M1911":BaseClasses.ShopGunObject("M1911","M1911",800,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("M1911"),GetGroundObj("M1911")),
+	"Itaca":BaseClasses.ShopGunObject("Itaca","Itaca",3200,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Itaca"),GetGroundObj("Itaca")),
+	"Spas":BaseClasses.ShopGunObject("Spas","Spas",5000,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Spas"),GetGroundObj("Spas")),
+	"PistolAmmo":BaseClasses.ShopGunObject("PistolAmmo","Pistol Ammo",150,load("res://Sprites/Guns/Yates/knife.png"),null,GetGroundObj("PistolAmmo")),
+	"RifleAmmo":BaseClasses.ShopGunObject("RifleAmmo","Rifle Ammo",200,load("res://Sprites/Guns/Yates/knife.png"),null,GetGroundObj("RifleAmmo")),
+	"BuckshotAmmo":BaseClasses.ShopGunObject("BuckshotAmmo","Shotgun Ammo",200,load("res://Sprites/Guns/Yates/knife.png"),null,GetGroundObj("BuckshotAmmo")),
+	"Adrenaline":BaseClasses.ShopGunObject("Adrenaline","Adrenaline",800,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Adrenaline"),GetGroundObj("Adrenaline")),
+	"Medkit":BaseClasses.ShopGunObject("Medkit","Medkit",700,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Medkit"),GetGroundObj("Medkit")),
+	"MedPack":BaseClasses.ShopGunObject("MedPack","MedPack",400,load("res://Sprites/Guns/Yates/knife.png"),null,GetGroundObj("MedPack")),
+}
 
+func GetShopGunObject(key):
+	if ShopGunObject.has(key):
+		return ShopGunObject[key].duplicate(true)
+	else:
+		print("ShopGunObject " + key + " does not exist")
+		return false
 
 var ActiveTeams = Array()
