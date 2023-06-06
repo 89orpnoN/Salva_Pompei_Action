@@ -123,22 +123,23 @@ func GetProp(key):
 		return false
 
 var ShopGunObject = {
-	"Knife":BaseClasses.ShopGunObject("Knife","Knife",500,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Knife"),GetGroundObj("Knife")),
-	"Ak-47":BaseClasses.ShopGunObject("Ak-47","Ak-47",5300,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Ak-47"),GetGroundObj("Ak-47")),
-	"M16":BaseClasses.ShopGunObject("M16","M16",5600,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("M16"),GetGroundObj("M16")),
-	"Deagle":BaseClasses.ShopGunObject("Deagle","Deagle",1800,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Deagle"),GetGroundObj("Deagle")),
-	"Magnum":BaseClasses.ShopGunObject("Magnum","Magnum",2500,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Magnum"),GetGroundObj("Magnum")),
-	"Glock":BaseClasses.ShopGunObject("Glock","Glock",1400,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Glock"),GetGroundObj("Glock")),
-	"M1911":BaseClasses.ShopGunObject("M1911","M1911",800,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("M1911"),GetGroundObj("M1911")),
-	"Itaca":BaseClasses.ShopGunObject("Itaca","Itaca",3200,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Itaca"),GetGroundObj("Itaca")),
-	"Spas":BaseClasses.ShopGunObject("Spas","Spas",5000,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Spas"),GetGroundObj("Spas")),
-	"PistolAmmo":BaseClasses.ShopGunObject("PistolAmmo","Pistol Ammo",150,load("res://Sprites/Guns/Yates/knife.png"),null,GetGroundObj("PistolAmmo")),
-	"RifleAmmo":BaseClasses.ShopGunObject("RifleAmmo","Rifle Ammo",200,load("res://Sprites/Guns/Yates/knife.png"),null,GetGroundObj("RifleAmmo")),
-	"BuckshotAmmo":BaseClasses.ShopGunObject("BuckshotAmmo","Shotgun Ammo",200,load("res://Sprites/Guns/Yates/knife.png"),null,GetGroundObj("BuckshotAmmo")),
-	"Adrenaline":BaseClasses.ShopGunObject("Adrenaline","Adrenaline",800,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Adrenaline"),GetGroundObj("Adrenaline")),
-	"Medkit":BaseClasses.ShopGunObject("Medkit","Medkit",700,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Medkit"),GetGroundObj("Medkit")),
-	"MedPack":BaseClasses.ShopGunObject("MedPack","MedPack",400,load("res://Sprites/Guns/Yates/knife.png"),null,GetGroundObj("MedPack")),
+	"Knife":BaseClasses.ShopGunObject("Knife","Knife",1500,load("res://Sprites/Guns/Yates/knife.png"),getWeapon("Knife"),GetGroundObj("Knife")),
+	"Ak-47":BaseClasses.ShopGunObject("Ak-47","Ak-47",15900,load("res://Sprites/Guns/Memeoji/ak47_m.png"),getWeapon("Ak-47"),GetGroundObj("Ak-47")),
+	"M16":BaseClasses.ShopGunObject("M16","M16",16800,load("res://Sprites/Guns/Captione/m4a1_m.png"),getWeapon("M16"),GetGroundObj("M16")),
+	"Deagle":BaseClasses.ShopGunObject("Deagle","Deagle",5400,load("res://Sprites/Guns/Axel340/deagle_m.png"),getWeapon("Deagle"),GetGroundObj("Deagle")),
+	"Magnum":BaseClasses.ShopGunObject("Magnum","Magnum",7500,load("res://Sprites/Guns/EquinoX/44magnum_m.bmp"),getWeapon("Magnum"),GetGroundObj("Magnum")),
+	"Glock":BaseClasses.ShopGunObject("Glock","Glock",4200,load("res://Sprites/Guns/Axel340/glock_m.png"),getWeapon("Glock"),GetGroundObj("Glock")),
+	"M1911":BaseClasses.ShopGunObject("M1911","M1911",2400,load("res://Sprites/Guns/bamg/1911_m.png"),getWeapon("M1911"),GetGroundObj("M1911")),
+	"Itaca":BaseClasses.ShopGunObject("Itaca","Itaca",9600,load("res://Sprites/Guns/M5H4cK/m3_mAlt.png"),getWeapon("Itaca"),GetGroundObj("Itaca")),
+	"Spas":BaseClasses.ShopGunObject("Spas","Spas",15000,load("res://Sprites/Guns/Captione/spas_m.png"),getWeapon("Spas"),GetGroundObj("Spas")),
+	"PistolAmmo":BaseClasses.ShopGunObject("PistolAmmo","Pistol Ammo",450,load("res://Sprites/Ammopacks/ammo-pistol 32px.png"),null,GetGroundObj("PistolAmmo")),
+	"RifleAmmo":BaseClasses.ShopGunObject("RifleAmmo","Rifle Ammo",600,load("res://Sprites/Ammopacks/ammo-rifle 32px.png"),null,GetGroundObj("RifleAmmo")),
+	"BuckshotAmmo":BaseClasses.ShopGunObject("BuckshotAmmo","Shotgun Ammo",600,load("res://Sprites/Ammopacks/ammo-shotgun 32px.png"),null,GetGroundObj("BuckshotAmmo")),
+	"Adrenaline":BaseClasses.ShopGunObject("Adrenaline","Adrenaline",2400,load("res://Sprites/HealthPacks/Adrenaline.png"),getWeapon("Adrenaline"),GetGroundObj("Adrenaline")),
+	"Medkit":BaseClasses.ShopGunObject("Medkit","Medkit",2100,load("res://Sprites/HealthPacks/MedPack.png"),getWeapon("Medkit"),GetGroundObj("Medkit")),
+	"MedPack":BaseClasses.ShopGunObject("MedPack","small Medkit",1200,load("res://Sprites/HealthPacks/MedPack.png"),null,GetGroundObj("MedPack")),
 }
+
 
 func GetShopGunObject(key):
 	if ShopGunObject.has(key):

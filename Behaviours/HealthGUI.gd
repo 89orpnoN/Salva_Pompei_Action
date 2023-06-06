@@ -8,4 +8,4 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	text = str(round(Player.creatureObject.Health.Health)) + "  " + str(round(Player.creatureObject.Health.TempHealth))
+	text = str(round(Player.creatureObject.Health.Health)) + "  " + str(round(Player.creatureObject.Health.TempHealth)) + " " + str(Player.creatureObject.Money)

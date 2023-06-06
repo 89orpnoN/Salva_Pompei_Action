@@ -79,10 +79,11 @@ func _process(delta):
 	BaseClasses.DissipateRecoil(delta,creatureObject.Gun)
 
 
-func Die():
+func Die(creature = null):
 	var rating = BaseClasses.MenaceRating(creatureObject)
 	bloodPuddle()
 	randomDrops(rating)
+	GiveMoney(rating,creature)
 
 	queue_free()
 
@@ -92,6 +93,10 @@ func bloodPuddle():
 	blood.scale = Vector2(0.1,0.1)
 	blood.texture = load("res://Sprites/DeathReactions/Blood splatter.png")
 	get_node("/root").add_child(blood)
+
+func GiveMoney(rating,Creature):
+	if Creature != null:
+		Creature.Money += roundi(rating/4)*100
 
 func randomDrops(rating):
 	var random = randi_range(0,100)

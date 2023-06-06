@@ -15,12 +15,13 @@ func _process(delta):
 	pass
 
 
-func OnBulletFired(origin,angle,DMG,Speed,group,range):
+func OnBulletFired(origin,angle,DMG,Speed,group,FatherCreature,range):
 	var clone_node = duplicate(0)
 	clone_node.set_script(load("res://Behaviours/ChildBullet.gd"))
 	clone_node.speed = Vector2(Speed,0).rotated(deg_to_rad(angle))
 	clone_node.damage = DMG
 	clone_node.range = range
+	clone_node.Father = FatherCreature
 	clone_node.team = group
 	clone_node.originPosition = origin
 	get_parent().add_child(clone_node)

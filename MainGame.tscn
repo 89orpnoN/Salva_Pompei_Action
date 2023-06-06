@@ -343,6 +343,9 @@ offset_left = -393.0
 offset_top = -242.0
 offset_right = -24.0
 offset_bottom = 77.0
+focus_mode = 1
 
 [connection signal="velocity_computed" from="MotherEnemy/PathMaker" to="MotherEnemy" method="_on_path_maker_velocity_computed"]
+[connection signal="pressed" from="ShopMenu/ShopButton" to="ShopMenu" method="_on_shop_button_pressed"]
 [connection signal="item_clicked" from="ShopMenu/GunList" to="ShopMenu" method="_on_gun_list_item_clicked"]
+[connection signal="item_selected" from="ShopMenu/GunList" to="ShopMenu" method="_on_gun_list_item_selected"]

@@ -1,6 +1,6 @@
 extends Node2D
 
-signal shootprojectile(origin,creature,script)
+signal shootprojectile(origin,angle,DMG,Speed,group,FatherCreature,range)
 
 signal spawnEnemy(origin,creature,script,function)
 
@@ -156,7 +156,7 @@ func AddAmmoPackToInventory(creature,AmmoPack): #literally the above, but is sui
 		AmmoPack.Amount = 0
 		return true
 
-func SpawnGroundObj(Scene,Coords,GroundObj,Behaviour):
+func SpawnGroundObj(Scene,Coords,GroundObj,Behaviour = GroundObj.Behaviour):
 		var sprt = Sprite2D.new()
 		var shape = CollisionShape2D.new()
 		var circleshape =  CircleShape2D.new()
@@ -187,16 +187,17 @@ func DeleteGun(creature,Deletegun):
 
 func DropGun(creature,Dropgun):
 	var gun = creature.Gun
-	if Dropgun == gun:
-		ChangeGun(creature,1)
-	var category = creature.Inventory[Dropgun.Category]
-	category[0].erase(Dropgun)
 	var groundobj = BaseItems.GetGroundObj(Dropgun.Name)
 	if typeof(groundobj)!=TYPE_BOOL:
+		var category = creature.Inventory[Dropgun.Category]
+		category[0].erase(Dropgun)
 		groundobj.Item = Dropgun
 		SpawnGroundObj(creature.Target.get_node("/root"),creature.Target.global_position,groundobj,groundobj.Behaviour)
 	else:
 		print("Item could not be dropped")
+	if Dropgun == gun:
+		ChangeGun(creature,1)
+	
 	
 func DropHeldGun(creature):
 	var Dropgun = creature.Gun
@@ -283,7 +284,7 @@ func ScaleHealth(Healthobj, damage):
 
 
 
-func Creature(target,health = null,inventory = Inventory(),movementforce = [250000.0,250000.0,250000.0,250000.0],mass = 100.0,turnforce =100000.0,rotationoffset=0.0,gun = null,projectileoffset = Vector2(50,0),team = "None",CreatureAppearance = null):
+func Creature(target,health = null,inventory = Inventory(),movementforce = [250000.0,250000.0,250000.0,250000.0],mass = 100.0,turnforce =100000.0,rotationoffset=0.0,gun = null,projectileoffset = Vector2(50,0),team = "None",CreatureAppearance = null,Money = 0):
 	var creature = {
 	"State":0,
 	"Target":target,
@@ -297,7 +298,7 @@ func Creature(target,health = null,inventory = Inventory(),movementforce = [2500
 	"ProjectileOffset":projectileoffset,
 	"Team":team,
 	"CreatureAppearance":CreatureAppearance,
-	
+	"Money":Money,
 	}
 	return creature.duplicate(true)
 
@@ -482,7 +483,7 @@ func BulletSpread(creature): #randomizes the direction of the bullets
 
 
 func meleeAnim(creature): #makes the node rotate to give the impression it's swinging a weapon
-	var rotation = creature.CreatureAppearance.AnimNode.rotation
+	var rotation = 0
 	var itime = Time.get_ticks_msec()
 	var delta = 0
 	var max = 100
@@ -508,7 +509,7 @@ func ShootProjectile(creature): #function that triggers each time a creature tri
 				PlaySound(creature.Gun.GunNode,creature.Gun.gunAppearance.ShootSFX)
 				for i in range(gun.BulletAmount):
 					var randomspread = BulletSpread(creature)
-					shootprojectile.emit(rotatedOrigin,actual_rotation+randomspread,gun.Damage,gun.Speed,creature.Team,gun.Range)
+					shootprojectile.emit(rotatedOrigin,actual_rotation+randomspread,gun.Damage,gun.Speed,creature.Team,creature,gun.Range)
 				gun.AdditiveRecoil += gun.BulletRecoil
 				gun.BulletsRemaining-= 1
 				if gun.IsMelee:
@@ -679,19 +680,24 @@ func IsInActiveBuyArea(playerNode):
 	return false
 		
 func SwitchOpenBuyMenu(root,playerNode):
-	pass
+	if playerNode.get_node("MainCamera").get_node("ShopMenu") != null:
+		CloseBuyMenu(root,playerNode)
+	elif root.get_node("ShopMenu")!= null:
+		OpenBuyMenu(root,playerNode)
 
 func OpenBuyMenu(root,playerNode):
 	if IsInActiveBuyArea(playerNode):
-		
-		print("pollo")
-		var shopmenu = root.get_node("ShopMenu")
-		shopmenu.get_parent().remove_child(shopmenu)
-		playerNode.get_node("MainCamera").add_child(shopmenu)
+		var playercamera = playerNode.get_node("MainCamera")
+		var shopmenu = root.get_node("ShopMenu").duplicate(5)
+		shopmenu.Opener = playerNode.creatureObject
+		playercamera.add_child(shopmenu)
 		shopmenu.global_position = playerNode.global_position
+		var a = func(root,playerNode):
+			if !IsInActiveBuyArea(playerNode):
+				CloseBuyMenu(root,playerNode)
+		UpdateEveryX(0.5,shopmenu,a,[root,playerNode])
 
 func CloseBuyMenu(root,playerNode):
-	var shopmenu = get_node("/ShopMenu")
-	playerNode.get_node("MainCamera").remove_child(shopmenu)
-	root.add_child(shopmenu)
-	shopmenu.global_position = GarbageCoords
+	var playercamera = playerNode.get_node("MainCamera")
+	var shopmenu = playercamera.get_node("ShopMenu")
+	playercamera.remove_child(shopmenu)

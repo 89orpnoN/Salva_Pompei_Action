@@ -7,6 +7,7 @@ var rotationValue
 var range
 var team
 var originPosition
+var Father
 var genericHitSound
 func _init():
 	pass
@@ -25,7 +26,8 @@ func _physics_process(delta):
 			queue_free()
 		else:
 			if not team == body.creatureObject.Team:
-				BaseClasses.ScaleHealth(body.creatureObject.Health,damage)
+				if !BaseClasses.ScaleHealth(body.creatureObject.Health,damage):
+					body.Die(Father)
 				if body.creatureObject.CreatureAppearance != null:
 					BaseClasses.PlaySound(body,body.creatureObject.CreatureAppearance.HitSfx)
 				else:

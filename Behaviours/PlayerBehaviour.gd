@@ -26,11 +26,11 @@ func _ready():
 	Inventory = [BaseItems.getWeapon("Punch"),BaseItems.getWeapon("Knife"),BaseItems.getWeapon("Magnum"),BaseItems.getWeapon("Adrenaline")]
 	LastFootstep = [global_position,false]
 	ActionKeys = {
-		"forward":[Key(KEY_W),Key(KEY_UP)],
-		"backward":[Key(KEY_S),Key(KEY_DOWN)],
-		"left":[Key(KEY_A),Key(KEY_LEFT)],
-		"right":[Key(KEY_D),Key(KEY_RIGHT)],
-		"walk":[Key(KEY_SHIFT),Key(KEY_CTRL)],
+		"forward":[Key(KEY_W)],
+		"backward":[Key(KEY_S)],
+		"left":[Key(KEY_A)],
+		"right":[Key(KEY_D)],
+		"walk":[Key(KEY_SHIFT)],
 		"drop":[Key(KEY_G,Input.is_key_pressed,true)],
 		"reload":[Key(KEY_R)],
 		"shoot":[Key(MOUSE_BUTTON_LEFT,Input.is_mouse_button_pressed),Key(KEY_ALT)],
@@ -99,7 +99,7 @@ func Actions(delta):
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.PreviousGun,BaseClasses.ChangeGun,[creatureObject,-1])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.NextGun,BaseClasses.ChangeGun,[creatureObject,1])
 	ActionKeys.CheckAndExecuteKey.call(ActionKeys.drop,BaseClasses.DropGun,[creatureObject,creatureObject.Gun])
-	ActionKeys.CheckAndExecuteKey.call(ActionKeys.OpenBuyMenu,BaseClasses.OpenBuyMenu,[root,self])
+	ActionKeys.CheckAndExecuteKey.call(ActionKeys.OpenBuyMenu,BaseClasses.SwitchOpenBuyMenu,[root,self])
 
 
 
