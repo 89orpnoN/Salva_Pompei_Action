@@ -1,4 +1,4 @@
-extends RichTextLabel
+extends Node2D
 
 var Player
 # Called when the node enters the scene tree for the first time.
@@ -8,4 +8,5 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	text = str(round(Player.creatureObject.Health.Health)) + "  " + str(round(Player.creatureObject.Health.TempHealth)) + " " + str(Player.creatureObject.Money)
+	if Player != null:
+		text = str(round(Player.creatureObject.Health.Health)) + "  " + str(round(Player.creatureObject.Health.TempHealth)) + " " + str(Player.creatureObject.Money)

@@ -89,10 +89,10 @@ func Die(creature = null):
 
 func bloodPuddle():
 	var blood = Sprite2D.new()
-	blood.global_position = global_position
 	blood.scale = Vector2(0.1,0.1)
 	blood.texture = load("res://Sprites/DeathReactions/Blood splatter.png")
-	get_node("/root").add_child(blood)
+	get_node("/root/World").add_child(blood)
+	blood.global_position = global_position
 
 func GiveMoney(rating,Creature):
 	if Creature != null:
@@ -109,7 +109,7 @@ func randomDrops(rating):
 		BaseClasses.DropGun(creatureObject,dropitem)
 
 func attackphase(delta):
-	if BaseClasses.isObjectVisible(self,Victim) and BaseClasses.inRange(creatureObject,Victim.global_position):
+	if BaseClasses.isObjectVisible(self,Victim) and BaseClasses.inRange(creatureObject,Victim.global_position) and Victim.creatureObject.IsAlive:
 		PointToPoint(Victim.global_position,delta)
 		if creatureObject.Gun.AmmoType != null and creatureObject.Inventory[creatureObject.Gun.AmmoType][0] < 1:
 			ActionsArr.append(70)
@@ -122,7 +122,7 @@ func attackphase(delta):
 
 func GetNewVictim():
 	for i in Enemies:
-		if i !=null:
+		if i !=null and i.creatureObject.IsAlive:
 			if BaseClasses.isObjectVisible(self,i):
 				return i
 	return Victim

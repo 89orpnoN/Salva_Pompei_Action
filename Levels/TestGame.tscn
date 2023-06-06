@@ -1,0 +1,412 @@
+[gd_scene load_steps=31 format=3 uid="uid://byb8pv0v8qbg0"]
+
+[ext_resource type="Script" path="res://Behaviours/box1.gd" id="1_clfw8"]
+[ext_resource type="Script" path="res://Levels/LevelBuilders/TestGame.gd" id="1_oi37i"]
+[ext_resource type="Texture2D" uid="uid://1vdf3v0kc8k7" path="res://icon.svg" id="2_li3ps"]
+[ext_resource type="Script" path="res://Behaviours/PlayerBehaviour.gd" id="3_6u4bv"]
+[ext_resource type="Texture2D" uid="uid://dokmjaxd6a6bu" path="res://Sprites/Cursor/CenterCursor.png" id="4_6aysu"]
+[ext_resource type="Script" path="res://Behaviours/CenterSights.gd" id="5_40aym"]
+[ext_resource type="Texture2D" uid="uid://c82a6dkiv63rf" path="res://Sprites/Cursor/dinamic.png" id="6_0wffm"]
+[ext_resource type="Script" path="res://Behaviours/MainCamera.gd" id="7_byinq"]
+[ext_resource type="FontFile" uid="uid://beyokgj81xq6r" path="res://Fonts/Retro Gaming.ttf" id="8_heqic"]
+[ext_resource type="Script" path="res://Behaviours/MotherBullet.gd" id="10_ls8k1"]
+[ext_resource type="Script" path="res://Behaviours/GUIManager.gd" id="10_yeyxx"]
+[ext_resource type="Script" path="res://Behaviours/MotherEnemy.gd" id="11_e3bub"]
+[ext_resource type="Texture2D" uid="uid://bsnvkbsc5lsa" path="res://Sprites/Player/Mercenary.bmp" id="12_rwh30"]
+[ext_resource type="Texture2D" uid="uid://er22b740xal1" path="res://Sprites/Guns/Memeoji/ak47_m.png" id="13_roh1o"]
+[ext_resource type="Script" path="res://Behaviours/ShopMenu.gd" id="14_wvoh4"]
+[ext_resource type="Script" path="res://Behaviours/ReloadSceneButton.gd" id="15_pp0iw"]
+[ext_resource type="Script" path="res://Behaviours/ChangeSceneButton.gd" id="16_gyoec"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ab2cp"]
+bounce = 0.44
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_lbc0a"]
+absorbent = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_suw1q"]
+size = Vector2(1153, 75)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_pdoj0"]
+friction = 0.0
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_guooy"]
+friction = 0.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tkp2k"]
+radius = 38.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xkdnr"]
+size = Vector2(16, 16)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wc2k0"]
+radius = 38.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fkgjc"]
+atlas = ExtResource("12_rwh30")
+region = Rect2(32, 0, 30, 31)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_64q2p"]
+atlas = ExtResource("12_rwh30")
+region = Rect2(1, 0, 30, 31)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xinn3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fkgjc")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_64q2p")
+}],
+"loop": true,
+"name": &"Reloading",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j7kh2"]
+size = Vector2(1e+06, 1e+06)
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_htpnp"]
+vertices = PackedVector2Array(-31824, -17748, 30504, -18053, 630, -372, -642, -365, 30250, 19537, 641, 338, 640, 122, -32687, 20197, -673, 344, -671, 122, 628, -197, -642, -197)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(1, 4, 5, 6), PackedInt32Array(5, 4, 7, 8), PackedInt32Array(8, 7, 0, 9), PackedInt32Array(2, 1, 6, 10), PackedInt32Array(9, 0, 3, 11), PackedInt32Array(6, 9, 11, 10)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(630, -372, 628, -197, -642, -197, -642, -365), PackedVector2Array(-671, 122, -673, 344, 641, 338, 640, 122), PackedVector2Array(-31824, -17748, -32687, 20197, 30250, 19537, 30504, -18053)])
+
+[node name="World" type="Node2D" groups=["GodNode"]]
+position = Vector2(18, -64)
+script = ExtResource("1_oi37i")
+
+[node name="box" type="RigidBody2D" parent="." groups=["MapPhisicsOstacles"]]
+z_index = 6
+position = Vector2(201, 45)
+collision_mask = 3
+mass = 100.0
+physics_material_override = SubResource("PhysicsMaterial_ab2cp")
+gravity_scale = 0.0
+script = ExtResource("1_clfw8")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="box"]
+polygon = PackedVector2Array(63, -55, 64, 50, 62, 54, 60, 58, 57, 61, 53, 64, -52, 64, -56, 62, -59, 59, -62, 56, -64, 51, -64, -52, -63, -55, -60, -59, -56, -62, -53, -64, 52, -64, 56, -62, 59, -59, 61, -57)
+
+[node name="Sprite2D2" type="Sprite2D" parent="box"]
+texture = ExtResource("2_li3ps")
+
+[node name="wall2" type="StaticBody2D" parent="." groups=["MapWalls"]]
+z_index = 6
+position = Vector2(3, -278)
+collision_layer = 2
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_lbc0a")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="wall2"]
+shape = SubResource("RectangleShape2D_suw1q")
+
+[node name="Sprite2D" type="Sprite2D" parent="wall2"]
+scale = Vector2(9.00391, 0.609375)
+texture = ExtResource("2_li3ps")
+
+[node name="wall" type="StaticBody2D" parent="." groups=["MapWalls"]]
+z_index = 6
+position = Vector2(-3, 231)
+collision_layer = 2
+physics_material_override = SubResource("PhysicsMaterial_pdoj0")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="wall"]
+shape = SubResource("RectangleShape2D_suw1q")
+
+[node name="Sprite2D" type="Sprite2D" parent="wall"]
+scale = Vector2(9.00391, 0.609375)
+texture = ExtResource("2_li3ps")
+
+[node name="Player" type="RigidBody2D" parent="."]
+z_index = 5
+position = Vector2(-360, -3)
+collision_mask = 3
+mass = 100.0
+inertia = 10.0
+physics_material_override = SubResource("PhysicsMaterial_guooy")
+gravity_scale = 0.0
+continuous_cd = 2
+script = ExtResource("3_6u4bv")
+
+[node name="CenterSight" type="Sprite2D" parent="Player"]
+z_index = 10
+position = Vector2(-14, -69)
+texture = ExtResource("4_6aysu")
+script = ExtResource("5_40aym")
+metadata/_edit_lock_ = true
+
+[node name="1" type="Sprite2D" parent="Player/CenterSight"]
+texture = ExtResource("6_0wffm")
+metadata/_edit_lock_ = true
+
+[node name="2" type="Sprite2D" parent="Player/CenterSight"]
+texture = ExtResource("6_0wffm")
+metadata/Pos = [true, true]
+metadata/_edit_lock_ = true
+
+[node name="3" type="Sprite2D" parent="Player/CenterSight"]
+texture = ExtResource("6_0wffm")
+metadata/Pos = [true, true]
+metadata/_edit_lock_ = true
+
+[node name="4" type="Sprite2D" parent="Player/CenterSight"]
+texture = ExtResource("6_0wffm")
+metadata/Pos = [true, true]
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("CircleShape2D_tkp2k")
+metadata/_edit_lock_ = true
+
+[node name="PlayerAppearance" type="AnimatedSprite2D" parent="Player"]
+position = Vector2(0, -1)
+scale = Vector2(3, 3)
+animation = &""
+offset = Vector2(1, -3.5)
+
+[node name="Gun" type="Sprite2D" parent="Player/PlayerAppearance"]
+metadata/_edit_lock_ = true
+
+[node name="MainCamera" type="Camera2D" parent="Player"]
+position = Vector2(0, -1)
+zoom = Vector2(1.1, 1.1)
+process_callback = 0
+position_smoothing_speed = 15.0
+script = ExtResource("7_byinq")
+metadata/_edit_lock_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Player/MainCamera"]
+visibility_layer = 512
+z_index = 99
+z_as_relative = false
+offset_left = -845.0
+offset_top = 289.0
+offset_right = -587.0
+offset_bottom = 422.0
+theme_override_fonts/normal_font = ExtResource("8_heqic")
+theme_override_font_sizes/normal_font_size = 40
+script = ExtResource("10_yeyxx")
+
+[node name="MotherBullet" type="RigidBody2D" parent="."]
+z_index = 3
+position = Vector2(-100000, -100000)
+collision_layer = 0
+collision_mask = 7
+freeze = true
+script = ExtResource("10_ls8k1")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MotherBullet"]
+shape = SubResource("RectangleShape2D_xkdnr")
+
+[node name="BulletSprite" type="Sprite2D" parent="MotherBullet"]
+scale = Vector2(0.132813, 0.132813)
+texture = ExtResource("2_li3ps")
+
+[node name="MotherEnemy" type="RigidBody2D" parent="."]
+z_index = 4
+position = Vector2(-100000, -1e+07)
+collision_mask = 3
+mass = 100.0
+inertia = 10.0
+script = ExtResource("11_e3bub")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MotherEnemy"]
+shape = SubResource("CircleShape2D_wc2k0")
+metadata/_edit_lock_ = true
+
+[node name="PathMaker" type="NavigationAgent2D" parent="MotherEnemy"]
+path_desired_distance = 105.71
+path_max_distance = 300.0
+avoidance_enabled = true
+radius = 257.57
+debug_enabled = true
+
+[node name="EnemyAppearance" type="AnimatedSprite2D" parent="MotherEnemy"]
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_xinn3")
+animation = &"Reloading"
+offset = Vector2(0.4, -3.2)
+metadata/_edit_lock_ = true
+
+[node name="Gun" type="Sprite2D" parent="MotherEnemy/EnemyAppearance"]
+position = Vector2(0.666668, -19.6667)
+metadata/_edit_lock_ = true
+
+[node name="FrictionCanvas" type="Area2D" parent="."]
+position = Vector2(-1, -91)
+collision_layer = 128
+collision_mask = 255
+linear_damp_space_override = 1
+linear_damp = 7.619
+angular_damp_space_override = 1
+angular_damp = 12.422
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FrictionCanvas"]
+visible = false
+position = Vector2(33, -10)
+shape = SubResource("RectangleShape2D_j7kh2")
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="FrictionCanvas"]
+visible = false
+position = Vector2(7, 94)
+navigation_polygon = SubResource("NavigationPolygon_htpnp")
+
+[node name="ShopMenutemp" type="Node2D" parent="."]
+visible = false
+position = Vector2(-1e+06, -1e+08)
+
+[node name="BuyGun" type="Button" parent="ShopMenutemp"]
+offset_left = -46.0
+offset_top = -15.0
+offset_right = 297.0
+offset_bottom = 101.0
+size_flags_horizontal = 4
+size_flags_vertical = 6
+action_mode = 0
+text = "
+"
+alignment = 0
+metadata/_edit_lock_ = true
+
+[node name="PriceLabel" type="RichTextLabel" parent="ShopMenutemp/BuyGun"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.293003
+anchor_top = 0.275862
+anchor_right = 0.293003
+anchor_bottom = 0.275862
+offset_left = -91.5
+offset_top = -30.0
+offset_right = 91.5
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/normal_font = ExtResource("8_heqic")
+theme_override_font_sizes/normal_font_size = 24
+text = "$1000000
+"
+fit_content = true
+autowrap_mode = 0
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="NameLabel" type="RichTextLabel" parent="ShopMenutemp/BuyGun"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.698251
+anchor_top = 0.275862
+anchor_right = 0.864432
+anchor_bottom = 0.275862
+offset_left = -55.5
+offset_top = -30.0
+offset_right = 55.5
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/normal_font = ExtResource("8_heqic")
+theme_override_font_sizes/normal_font_size = 24
+text = "Ak-47
+"
+fit_content = true
+autowrap_mode = 0
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="WeaponAppearance" type="Sprite2D" parent="ShopMenutemp/BuyGun"]
+position = Vector2(173, 76)
+scale = Vector2(1.81977, 1.81977)
+texture = ExtResource("13_roh1o")
+metadata/_edit_lock_ = true
+
+[node name="ShopMenu" type="Node2D" parent="."]
+z_index = 99
+position = Vector2(-1469, 57)
+script = ExtResource("14_wvoh4")
+
+[node name="ShopButton" type="Button" parent="ShopMenu"]
+offset_left = 560.0
+offset_top = 285.0
+offset_right = 819.0
+offset_bottom = 431.0
+button_mask = 2
+
+[node name="GunList" type="ItemList" parent="ShopMenu"]
+offset_left = -787.0
+offset_top = -418.0
+offset_right = 50.0
+offset_bottom = 429.0
+focus_mode = 0
+allow_rmb_select = true
+
+[node name="DeathMenu" type="Node2D" parent="."]
+z_index = 100
+z_as_relative = false
+position = Vector2(2021, 23)
+
+[node name="You are dead" type="RichTextLabel" parent="DeathMenu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -664.0
+offset_top = -405.0
+offset_right = 717.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.559538, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("8_heqic")
+theme_override_font_sizes/normal_font_size = 150
+text = "You are dead"
+autowrap_mode = 0
+
+[node name="Try Again" type="Button" parent="DeathMenu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -607.0
+offset_top = 73.0
+offset_right = -149.0
+offset_bottom = 227.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("8_heqic")
+theme_override_font_sizes/font_size = 75
+text = "Try Again"
+script = ExtResource("15_pp0iw")
+
+[node name="Give Up" type="Button" parent="DeathMenu"]
+offset_left = 120.0
+offset_top = 75.0
+offset_right = 547.0
+offset_bottom = 229.0
+theme_override_fonts/font = ExtResource("8_heqic")
+theme_override_font_sizes/font_size = 75
+text = "Give Up"
+script = ExtResource("16_gyoec")
+metadata/LevelPortal = &"res://Menu.tscn"
+
+[connection signal="velocity_computed" from="MotherEnemy/PathMaker" to="MotherEnemy" method="_on_path_maker_velocity_computed"]
+[connection signal="pressed" from="ShopMenu/ShopButton" to="ShopMenu" method="_on_shop_button_pressed"]
+[connection signal="item_clicked" from="ShopMenu/GunList" to="ShopMenu" method="_on_gun_list_item_clicked"]
+[connection signal="item_selected" from="ShopMenu/GunList" to="ShopMenu" method="_on_gun_list_item_selected"]

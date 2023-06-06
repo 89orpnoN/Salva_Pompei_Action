@@ -22,8 +22,9 @@ func GunAppearance(Sprite = null,DropSprite = null, BuySprite=null,KillSprite=nu
 	}
 	return gunAppearance.duplicate()
 
-func BuyArea(Baseprice = 1):
+func BuyArea(sprite = null,Baseprice = 1):
 	var buyarea = {
+		"Sprite":sprite,
 		"Enabled":true, 
 		"Baseprice":Baseprice,
 	}
@@ -288,6 +289,7 @@ func Creature(target,health = null,inventory = Inventory(),movementforce = [2500
 	var creature = {
 	"State":0,
 	"Target":target,
+	"IsAlive":true,
 	"Health":health,
 	"Inventory":inventory,
 	"MovementForce":movementforce,
@@ -306,10 +308,11 @@ func Creature(target,health = null,inventory = Inventory(),movementforce = [2500
 func Morph(Target,AnimNode,Creature,NewTeam = Creature.Team): #to only use once in the same instance, if used more times the effect can be unpredictable
 	Target.creatureObject = Creature
 	Target.creatureObject.Team = NewTeam
-	
 	Target.add_to_group(NewTeam)
+	
 	if not (NewTeam in BaseItems.ActiveTeams):
 		BaseItems.ActiveTeams.append(NewTeam)
+	
 	Target.scale = Target.creatureObject.CreatureAppearance.Scale
 	Target.mass = Target.creatureObject.Mass
 	Target.creatureObject.CreatureAppearance.AnimNode = AnimNode
@@ -648,14 +651,15 @@ func CreateBuyArea(scene,areaobject,size,coords):
 		var shape = CollisionShape2D.new()
 		var rectangleshape =  RectangleShape2D.new()
 		var area = Area2D.new()
-		sprt.z_index = 3
+		sprt.z_index = 0
 		rectangleshape.size = size
 		shape.shape = rectangleshape
-		#sprt.texture = load("inserire sprite di sfondo dei negozi")
+		if areaobject.Sprite != null:
+			sprt.texture = load(areaobject.Sprite)
+			sprt.scale = (size/sprt.texture.get_size())
 		area.set_script(load("res://Behaviours/BuyArea.gd"))
 		area.AreaObject = areaobject
 		area.global_position = coords
-		area.global_rotation = randf_range(-PI,PI)
 		area.add_to_group("BuyArea")
 		area.add_child(shape)
 		area.add_child(sprt)
@@ -671,6 +675,7 @@ func ShopGunObject(Name,DisplayName,Price,Sprite,Gun,GroundObject):
 		"GroundObject":GroundObject,
 	}
 	return shopgunobject.duplicate(true)
+
 
 func IsInActiveBuyArea(playerNode):
 	var buyareas = get_tree().get_nodes_in_group("BuyArea")
@@ -701,3 +706,8 @@ func CloseBuyMenu(root,playerNode):
 	var playercamera = playerNode.get_node("MainCamera")
 	var shopmenu = playercamera.get_node("ShopMenu")
 	playercamera.remove_child(shopmenu)
+
+func BuyItem(creature,root,Item):
+	if creature.Money >= Item.Price:
+		creature.Money -= Item.Price
+		BaseClasses.SpawnGroundObj(root,creature.Target.global_position,Item.GroundObject)

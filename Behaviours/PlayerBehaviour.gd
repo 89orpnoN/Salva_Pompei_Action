@@ -59,30 +59,43 @@ func _ready():
 	var Creature = BaseItems.GetCreature("Soldier")
 	Creature.Health = BaseItems.GetCreatureHealth("PlayerSoldier")
 	BaseClasses.Morph(self,get_node("PlayerAppearance"),Creature,"Police")
+	var a = creatureObject.CreatureAppearance
 	BaseClasses.AddThingsToInventory(creatureObject,Inventory)
 	BaseClasses.EquipGun(creatureObject,BaseClasses.arrayAt(BaseClasses.GetAllThings(creatureObject),0),self,get_node("PlayerAppearance/Gun"))
 	LastFrameHP = creatureObject.Health
-	BaseClasses.SpawnGroundObj(root,Vector2(-360,-60),BaseItems.GetGroundObj("Adrenaline"),load("res://Behaviours/HealthPackGroundObject.gd"))
-	BaseClasses.SpawnGroundObj(root,Vector2(-360,-60),BaseItems.GetGroundObj("Medkit"),load("res://Behaviours/HealthPackGroundObject.gd"))
-	BaseClasses.SpawnGroundObj(root,Vector2(-60,-60),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("BuckshotAmmo"),7),load("res://Behaviours/AmmoGroundObject.gd"))
-	BaseClasses.SpawnGroundObj(root,Vector2(30,30),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("RifleAmmo"),30),load("res://Behaviours/AmmoGroundObject.gd"))
-	BaseClasses.SpawnGroundObj(root,Vector2(-30,-30),BaseClasses.AmmopackInit(BaseItems.GetGroundObj("PistolAmmo"),30),load("res://Behaviours/AmmoGroundObject.gd"))
-	BaseClasses.SpawnGroundObj(root,Vector2(0,0),BaseItems.GetGroundObj("M16"),load("res://Behaviours/GunGroundObject.gd"))
-	BaseClasses.CreateBuyArea(root,BaseClasses.BuyArea(),Vector2(1000,1000),Vector2(-200,-200))
-		
+
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 
 		
 	if creatureObject.Health.Health <= 0:
-		queue_free()
-		print("dead")
-	
-	BaseClasses.Stepping(creatureObject)
-	
-	Actions(delta)
-	BaseClasses.DissipateRecoil(delta,creatureObject.Gun)
+		Die()
 
+	if creatureObject.IsAlive:
+		BaseClasses.Stepping(creatureObject)
+		Actions(delta)
+		BaseClasses.DissipateRecoil(delta,creatureObject.Gun)
+
+
+func Die(killer = null):
+	
+	if creatureObject.IsAlive:
+		bloodPuddle()
+		var camera = get_node("MainCamera")
+		remove_child(camera)
+		get_node("../DeathMenu").global_position = global_position
+		get_node("..").add_child(camera)
+		camera.global_position = global_position
+		creatureObject.IsAlive = !creatureObject.IsAlive
+		queue_free()
+
+func bloodPuddle():
+	var blood = Sprite2D.new()
+	blood.global_position = global_position
+	blood.scale = Vector2(0.1,0.1)
+	blood.texture = load("res://Sprites/DeathReactions/Blood splatter.png")
+	get_node("/root/World").add_child(blood)
 
 func Actions(delta):
 	MoveDirections = Vector2(0,0)
@@ -104,6 +117,7 @@ func Actions(delta):
 
 
 func ShootTry():
+	
 	creatureObject.Gun.OnShoot.callv(creatureObject.Gun.OnShootParams)
 
 func ReloadTry():
