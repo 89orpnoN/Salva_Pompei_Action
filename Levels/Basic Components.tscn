@@ -1,7 +1,6 @@
-[gd_scene load_steps=26 format=3 uid="uid://dftxv8nyrtf5i"]
+[gd_scene load_steps=28 format=3 uid="uid://dftxv8nyrtf5i"]
 
 [ext_resource type="Script" path="res://Levels/LevelBuilders/TestGame.gd" id="1_virgx"]
-[ext_resource type="Texture2D" uid="uid://1vdf3v0kc8k7" path="res://icon.svg" id="3_yyl37"]
 [ext_resource type="Script" path="res://Behaviours/PlayerBehaviour.gd" id="4_o0opq"]
 [ext_resource type="Texture2D" uid="uid://dokmjaxd6a6bu" path="res://Sprites/Cursor/CenterCursor.png" id="5_ygwq5"]
 [ext_resource type="Script" path="res://Behaviours/CenterSights.gd" id="6_iw2qe"]
@@ -9,7 +8,10 @@
 [ext_resource type="Texture2D" uid="uid://c82a6dkiv63rf" path="res://Sprites/Cursor/dinamic.png" id="7_usaa3"]
 [ext_resource type="Script" path="res://Behaviours/MainCamera.gd" id="8_4re23"]
 [ext_resource type="FontFile" uid="uid://beyokgj81xq6r" path="res://Fonts/Retro Gaming.ttf" id="9_0d501"]
+[ext_resource type="Texture2D" uid="uid://bb2hd4ku3x0il" path="res://Sprites/Guns/M5H4cK/m3_m.png" id="9_b0i7c"]
+[ext_resource type="Texture2D" uid="uid://cjn58xsji4j0l" path="res://Sprites/Guns/Captione/m4a1_m.png" id="10_5m8t2"]
 [ext_resource type="Script" path="res://Behaviours/MotherBullet.gd" id="11_paais"]
+[ext_resource type="Texture2D" uid="uid://qxwomyshmcfw" path="res://Sprites/Guns/BulletSprite.png" id="12_7473y"]
 [ext_resource type="Script" path="res://Behaviours/MotherEnemy.gd" id="12_feit3"]
 [ext_resource type="Texture2D" uid="uid://bsnvkbsc5lsa" path="res://Sprites/Player/Mercenary.bmp" id="13_5wbvp"]
 [ext_resource type="Texture2D" uid="uid://er22b740xal1" path="res://Sprites/Guns/Memeoji/ak47_m.png" id="14_t8fyo"]
@@ -130,46 +132,54 @@ position_smoothing_speed = 15.0
 script = ExtResource("8_4re23")
 metadata/_edit_lock_ = true
 
-[node name="Node2D" type="Node2D" parent="Player/MainCamera"]
+[node name="GuiManager" type="Node2D" parent="Player/MainCamera"]
 script = ExtResource("7_q2553")
 
-[node name="Health" type="RichTextLabel" parent="Player/MainCamera/Node2D"]
+[node name="Health" type="RichTextLabel" parent="Player/MainCamera/GuiManager"]
 visibility_layer = 512
 z_index = 99
 z_as_relative = false
 offset_left = -862.0
 offset_top = 270.0
 offset_right = -604.0
-offset_bottom = 403.0
+offset_bottom = 322.0
+theme_override_colors/default_color = Color(0, 0.862745, 0, 1)
 theme_override_fonts/normal_font = ExtResource("9_0d501")
 theme_override_font_sizes/normal_font_size = 40
 text = "100"
+scroll_active = false
+autowrap_mode = 0
 
-[node name="Ammo" type="RichTextLabel" parent="Player/MainCamera/Node2D"]
+[node name="Ammo" type="RichTextLabel" parent="Player/MainCamera/GuiManager"]
 visibility_layer = 512
 z_index = 99
 z_as_relative = false
-offset_left = -796.0
-offset_top = 323.0
-offset_right = -538.0
-offset_bottom = 456.0
+offset_left = -785.0
+offset_top = 325.0
+offset_right = -530.0
+offset_bottom = 394.0
 theme_override_fonts/normal_font = ExtResource("9_0d501")
 theme_override_font_sizes/normal_font_size = 40
 text = "12 / 24"
+scroll_active = false
+autowrap_mode = 0
 
-[node name="SuperHealth" type="RichTextLabel" parent="Player/MainCamera/Node2D"]
+[node name="SuperHealth" type="RichTextLabel" parent="Player/MainCamera/GuiManager"]
 visibility_layer = 512
 z_index = 99
 z_as_relative = false
 offset_left = -600.0
 offset_top = 269.0
 offset_right = -342.0
-offset_bottom = 402.0
+offset_bottom = 322.0
+theme_override_colors/default_color = Color(0, 0, 0.886275, 1)
 theme_override_fonts/normal_font = ExtResource("9_0d501")
 theme_override_font_sizes/normal_font_size = 40
 text = "54"
+scroll_active = false
+autowrap_mode = 0
 
-[node name="Money" type="RichTextLabel" parent="Player/MainCamera/Node2D"]
+[node name="Money" type="RichTextLabel" parent="Player/MainCamera/GuiManager"]
 visibility_layer = 512
 z_index = 99
 z_as_relative = false
@@ -181,11 +191,18 @@ theme_override_fonts/normal_font = ExtResource("9_0d501")
 theme_override_font_sizes/normal_font_size = 40
 text = "10000"
 
-[node name="InventoryList" type="ItemList" parent="Player/MainCamera/Node2D"]
+[node name="InventoryList" type="ItemList" parent="Player/MainCamera/GuiManager"]
+visible = false
 offset_left = -828.0
-offset_top = 187.0
-offset_right = -788.0
-offset_bottom = 227.0
+offset_top = 176.0
+offset_right = -689.0
+offset_bottom = 256.0
+auto_height = true
+item_count = 2
+item_0/text = ""
+item_0/icon = ExtResource("9_b0i7c")
+item_1/text = ""
+item_1/icon = ExtResource("10_5m8t2")
 
 [node name="MotherBullet" type="RigidBody2D" parent="."]
 z_index = 3
@@ -202,7 +219,7 @@ metadata/_edit_lock_ = true
 
 [node name="BulletSprite" type="Sprite2D" parent="MotherBullet"]
 scale = Vector2(0.132813, 0.132813)
-texture = ExtResource("3_yyl37")
+texture = ExtResource("12_7473y")
 metadata/_edit_lock_ = true
 
 [node name="MotherEnemy" type="RigidBody2D" parent="."]

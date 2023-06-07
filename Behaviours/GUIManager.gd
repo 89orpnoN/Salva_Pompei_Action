@@ -29,4 +29,4 @@ func _process(delta):
 			str += " / " + str(PlayercreatureObject.Inventory[PlayercreatureObject.Gun.AmmoType][0])
 		
 		Ammotext.text = str
-		Moneytext.text = str(Player.creatureObject.Money)
+		Moneytext.text = "$" +str(Player.creatureObject.Money)

@@ -1,6 +1,103 @@
-[gd_scene load_steps=2 format=3 uid="uid://cdek5upo31ssg"]
+[gd_scene load_steps=7 format=3 uid="uid://bgek7n0o42sq0"]
 
-[ext_resource type="Script" path="res://Levels/LevelBuilders/DemoLevel.gd" id="1_4vr4k"]
+[ext_resource type="PackedScene" uid="uid://b2ub3ipu2od8g" path="res://Levels/Basic Map Components.tscn" id="1_7qmbs"]
+[ext_resource type="Texture2D" path="res://Assets/Tilesets/Wall1.tres" id="2_ntu3m"]
+[ext_resource type="TileSet" uid="uid://b3bkbid6fxn6k" path="res://Assets/Tilesets/GrassTileMap.tres" id="5_5gj4n"]
+[ext_resource type="TileSet" uid="uid://w0cmohwosfvf" path="res://Assets/Tilesets/RoadTileSet.tres" id="6_s2ojx"]
+[ext_resource type="TileSet" uid="uid://b7am4647mcei8" path="res://Assets/Tilesets/PavementTileSet.tres" id="8_0udd3"]
 
-[node name="World" type="Node2D"]
-script = ExtResource("1_4vr4k")
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8iawi"]
+size = Vector2(162, 12)
+
+[node name="World" instance=ExtResource("1_7qmbs")]
+
+[node name="RoadFloor" parent="." index="5"]
+scale = Vector2(2, 2)
+
+[node name="PavementFloor" parent="." index="6"]
+scale = Vector2(2, 2)
+
+[node name="GrassFloor2" type="TileMap" parent="." index="7"]
+scale = Vector2(3, 3)
+tile_set = ExtResource("5_5gj4n")
+format = 2
+layer_0/tile_data = PackedInt32Array(-1, 131073, 0, -65536, 131073, 0, -65535, 131073, 0, -131071, 131073, 0, -131072, 131073, 0, -65537, 131073, 0, -65538, 131073, 0, -2, 131073, 0, 65534, 131073, 0, 65535, 131073, 0, 0, 131073, 0, 1, 131073, 0, 2, 131073, 0, -65534, 131073, 0, -131070, 131073, 0, -65539, 131073, 0, -3, 131073, 0, 65533, 131073, 0, -65540, 131073, 0, -4, 131073, 0, 65532, 131073, 0, -65533, 131073, 0, 3, 131073, 0, -65532, 131073, 0, 4, 131073, 0, -131069, 131073, 0, -131068, 131073, 0, 65531, 131073, 0)
+
+[node name="PavementFloor2" type="TileMap" parent="." index="8"]
+position = Vector2(-8, 0)
+scale = Vector2(2, 2)
+tile_set = ExtResource("8_0udd3")
+format = 2
+layer_0/tile_data = PackedInt32Array(-1, 0, 0, 65535, 65536, 1, 0, 0, 1, -65536, 65536, 0, -196605, 65536, 1, -196602, 0, 1, 6, 0, 0, 65542, 0, 1, -196604, 0, 1, -196603, 65536, 1, -196612, 0, 0, -196611, 65536, 0, -196610, 0, 0, -196609, 65536, 0, -262144, 0, 0, -262143, 65536, 0, -262142, 0, 0, -262141, 65536, 0, -262140, 0, 0, -262139, 65536, 0, -262138, 0, 0, -131076, 0, 1, -131075, 65536, 1, -131074, 0, 1, -131073, 65536, 1, -196608, 0, 1, -196607, 65536, 1, -196606, 0, 1, 131068, 0, 0, 196604, 0, 1, 131069, 65536, 0, 196605, 65536, 1, 131070, 0, 0, 196606, 0, 1, 131071, 65536, 0, 196607, 65536, 1, 65536, 0, 0, 131072, 0, 1, 65537, 65536, 0, 131073, 65536, 1, 65538, 0, 0, 131074, 0, 1, 65539, 65536, 0, 131075, 65536, 1, 65540, 0, 0, 131076, 0, 1, 65541, 65536, 0, 131077, 65536, 1, 131078, 0, 0, -262137, 65536, 0, -196601, 65536, 1, -131066, 0, 0, -65530, 0, 1, -131065, 65536, 0, -65529, 65536, 1, 7, 65536, 0, 65543, 65536, 1, 131079, 65536, 0)
+
+[node name="RoadFloor2" type="TileMap" parent="." index="9"]
+scale = Vector2(2, 2)
+tile_set = ExtResource("6_s2ojx")
+format = 2
+layer_0/tile_data = PackedInt32Array(-65536, 2, 1, -65535, 2, 1, -65534, 2, 1, 2, 2, 2, 1, 2, 2, 0, 2, 2, -65538, 2, 0, -65537, 2, 0, -131072, 2, 0, -131071, 2, 0, -131070, 2, 0, -131069, 2, 0, -131068, 2, 0, -2, 2, 1, -1, 2, 1, -65533, 2, 1, -65532, 2, 1, -65539, 2, 0, -3, 2, 1, 65533, 2, 2, 65534, 2, 2, 65535, 2, 2, 3, 2, 2, 4, 2, 2, -524288, 3, 0)
+
+[node name="Wall4" type="StaticBody2D" parent="." index="10"]
+z_index = 2
+position = Vector2(368, 281)
+scale = Vector2(4, 4)
+
+[node name="Texture" type="Sprite2D" parent="Wall4" index="0"]
+texture = ExtResource("2_ntu3m")
+metadata/_edit_lock_ = true
+
+[node name="Hitbox" type="CollisionShape2D" parent="Wall4" index="1"]
+shape = SubResource("RectangleShape2D_8iawi")
+metadata/_edit_lock_ = true
+
+[node name="Wall3" type="StaticBody2D" parent="." index="11"]
+z_index = 2
+position = Vector2(-281, -368)
+scale = Vector2(4, 4)
+
+[node name="Texture" type="Sprite2D" parent="Wall3" index="0"]
+texture = ExtResource("2_ntu3m")
+metadata/_edit_lock_ = true
+
+[node name="Hitbox" type="CollisionShape2D" parent="Wall3" index="1"]
+shape = SubResource("RectangleShape2D_8iawi")
+metadata/_edit_lock_ = true
+
+[node name="Wall5" type="StaticBody2D" parent="." index="12"]
+z_index = 2
+position = Vector2(717, -63)
+rotation = 1.5708
+scale = Vector2(4, 4)
+
+[node name="Texture" type="Sprite2D" parent="Wall5" index="0"]
+texture = ExtResource("2_ntu3m")
+metadata/_edit_lock_ = true
+
+[node name="Hitbox" type="CollisionShape2D" parent="Wall5" index="1"]
+shape = SubResource("RectangleShape2D_8iawi")
+metadata/_edit_lock_ = true
+
+[node name="Wall6" type="StaticBody2D" parent="." index="13"]
+z_index = 2
+position = Vector2(367, -368)
+scale = Vector2(4, 4)
+
+[node name="Texture" type="Sprite2D" parent="Wall6" index="0"]
+texture = ExtResource("2_ntu3m")
+metadata/_edit_lock_ = true
+
+[node name="Hitbox" type="CollisionShape2D" parent="Wall6" index="1"]
+shape = SubResource("RectangleShape2D_8iawi")
+metadata/_edit_lock_ = true
+
+[node name="Wall7" type="StaticBody2D" parent="." index="14"]
+z_index = 2
+position = Vector2(-281, 281)
+scale = Vector2(4, 4)
+
+[node name="Texture" type="Sprite2D" parent="Wall7" index="0"]
+texture = ExtResource("2_ntu3m")
+metadata/_edit_lock_ = true
+
+[node name="Hitbox" type="CollisionShape2D" parent="Wall7" index="1"]
+shape = SubResource("RectangleShape2D_8iawi")
+metadata/_edit_lock_ = true

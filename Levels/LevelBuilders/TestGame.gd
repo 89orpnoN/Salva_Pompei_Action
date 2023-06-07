@@ -3,6 +3,7 @@ extends Node
 var root = self
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	AddComponentsToLevel.main(self)
 	spawnenemies()
 	spawnItems()
 
@@ -25,6 +26,7 @@ func spawnenemies():
 	BaseClasses.AddThingsToInventory(creatureObject,[BaseItems.getWeapon("Knife")])
 	creatureObject.Team = "Undead"
 	BaseClasses.SpawnEnemy(Vector2(0,0),creatureObject,script,null)
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass

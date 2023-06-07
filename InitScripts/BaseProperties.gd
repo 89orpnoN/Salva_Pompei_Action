@@ -656,7 +656,7 @@ func CreateBuyArea(scene,areaobject,size,coords):
 		shape.shape = rectangleshape
 		if areaobject.Sprite != null:
 			sprt.texture = load(areaobject.Sprite)
-			sprt.scale = (size/sprt.texture.get_size())
+			#sprt.scale = (size/(sprt.texture.get_size()))
 		area.set_script(load("res://Behaviours/BuyArea.gd"))
 		area.AreaObject = areaobject
 		area.global_position = coords
