@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://c4847uno0oigq"]
+
+[ext_resource type="Texture2D" uid="uid://c2nuaf113ch5i" path="res://Assets/SpriteSheets/grass wehicles other.png" id="1_ffbyy"]
+
+[resource]
+atlas = ExtResource("1_ffbyy")
+region = Rect2(681.54, 10.25, 320.65, 492.47)

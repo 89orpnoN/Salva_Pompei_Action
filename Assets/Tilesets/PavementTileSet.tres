@@ -1,0 +1,16 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://b7am4647mcei8"]
+
+[ext_resource type="Texture2D" uid="uid://j7pc73xmjg2r" path="res://Assets/Tilesets/Pavement.tres" id="1_g8px2"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_32hi6"]
+texture = ExtResource("1_g8px2")
+margins = Vector2i(0, 1)
+texture_region_size = Vector2i(44, 44)
+0:0/0 = 0
+1:0/0 = 0
+1:1/0 = 0
+0:1/0 = 0
+
+[resource]
+tile_size = Vector2i(44, 44)
+sources/0 = SubResource("TileSetAtlasSource_32hi6")
