@@ -23,7 +23,7 @@ func Key(KEY, functioncheck = Input.is_key_pressed, UpNDown=false):
 
 func _ready():
 	root = get_node("/root/World/")
-	Inventory = [BaseItems.getWeapon("Punch"),BaseItems.getWeapon("Knife"),BaseItems.getWeapon("Magnum"),BaseItems.getWeapon("Adrenaline")]
+	Inventory = [BaseItems.getWeapon("Punch"),BaseItems.getWeapon("Knife"),BaseItems.getWeapon("M1911"),BaseItems.getWeapon("Adrenaline")]
 	LastFootstep = [global_position,false]
 	ActionKeys = {
 		"forward":[Key(KEY_W)],

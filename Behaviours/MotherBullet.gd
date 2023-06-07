@@ -1,13 +1,12 @@
 extends RigidBody2D
 
-var scene
+
  
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
 	BaseClasses.connect("shootprojectile", OnBulletFired)
 
-	scene = load("res://MainGame.tscn")
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

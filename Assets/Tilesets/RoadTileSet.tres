@@ -1,5 +1,6 @@
-[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://w0cmohwosfvf"]
+[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://w0cmohwosfvf"]
 
+[ext_resource type="Texture2D" uid="uid://dv7hr3255wumg" path="res://Assets/Tilesets/RoadVertical.tres" id="2_07ubl"]
 [ext_resource type="Texture2D" uid="uid://csxhryijt4odh" path="res://Assets/Tilesets/Road.tres" id="2_b5gdl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yyd4p"]
@@ -24,6 +25,22 @@ texture_region_size = Vector2i(51, 46)
 4:2/0 = 0
 5:2/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_84gyo"]
+texture = ExtResource("2_07ubl")
+separation = Vector2i(36, 0)
+texture_region_size = Vector2i(51, 46)
+0:0/0 = 0
+0:1/0 = 0
+0:2/0 = 0
+0:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+1:3/0 = 0
+1:2/0 = 0
+1:1/0 = 0
+1:0/0 = 0
+
 [resource]
 tile_size = Vector2i(51, 46)
 sources/2 = SubResource("TileSetAtlasSource_yyd4p")
+sources/3 = SubResource("TileSetAtlasSource_84gyo")
