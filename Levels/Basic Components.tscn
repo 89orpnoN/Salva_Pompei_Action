@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://dftxv8nyrtf5i"]
+[gd_scene load_steps=27 format=3 uid="uid://dftxv8nyrtf5i"]
 
 [ext_resource type="Script" path="res://Levels/LevelBuilders/TestGame.gd" id="1_virgx"]
 [ext_resource type="Script" path="res://Behaviours/PlayerBehaviour.gd" id="4_o0opq"]
@@ -65,11 +65,6 @@ animations = [{
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7kh2"]
 size = Vector2(1e+06, 1e+06)
-
-[sub_resource type="NavigationPolygon" id="NavigationPolygon_htpnp"]
-vertices = PackedVector2Array(-31824, -17748, 30504, -18053, 630, -372, -642, -365, 30250, 19537, 641, 338, 640, 122, -32687, 20197, -673, 344, -671, 122, 628, -197, -642, -197)
-polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(1, 4, 5, 6), PackedInt32Array(5, 4, 7, 8), PackedInt32Array(8, 7, 0, 9), PackedInt32Array(2, 1, 6, 10), PackedInt32Array(9, 0, 3, 11), PackedInt32Array(6, 9, 11, 10)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(630, -372, 628, -197, -642, -197, -642, -365), PackedVector2Array(-671, 122, -673, 344, 641, 338, 640, 122), PackedVector2Array(-31824, -17748, -32687, 20197, 30250, 19537, 30504, -18053)])
 
 [node name="World" type="Node2D" groups=["GodNode"]]
 script = ExtResource("1_virgx")
@@ -266,12 +261,6 @@ metadata/_edit_lock_ = true
 visible = false
 position = Vector2(33, -10)
 shape = SubResource("RectangleShape2D_j7kh2")
-metadata/_edit_lock_ = true
-
-[node name="NavigationRegion2D" type="NavigationRegion2D" parent="FrictionCanvas"]
-visible = false
-position = Vector2(7, 94)
-navigation_polygon = SubResource("NavigationPolygon_htpnp")
 metadata/_edit_lock_ = true
 
 [node name="ShopMenutemp" type="Node2D" parent="."]

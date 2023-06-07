@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://byb8pv0v8qbg0"]
+[gd_scene load_steps=9 format=3 uid="uid://byb8pv0v8qbg0"]
 
 [ext_resource type="Script" path="res://Behaviours/box1.gd" id="1_clfw8"]
 [ext_resource type="Script" path="res://Levels/LevelBuilders/TestGame.gd" id="1_oi37i"]
@@ -15,6 +15,11 @@ size = Vector2(1153, 75)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_pdoj0"]
 friction = 0.0
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_nwbml"]
+vertices = PackedVector2Array(-31824, -17748, 30504, -18053, 630, -372, -642, -365, 30250, 19537, 641, 338, 640, 122, -32687, 20197, -673, 344, -671, 122, 628, -197, -642, -197)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(1, 4, 5, 6), PackedInt32Array(5, 4, 7, 8), PackedInt32Array(8, 7, 0, 9), PackedInt32Array(2, 1, 6, 10), PackedInt32Array(9, 0, 3, 11), PackedInt32Array(6, 9, 11, 10)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(630, -372, 628, -197, -642, -197, -642, -365), PackedVector2Array(-671, 122, -673, 344, 641, 338, 640, 122), PackedVector2Array(-31824, -17748, -32687, 20197, 30250, 19537, 30504, -18053)])
 
 [node name="World" type="Node2D" groups=["GodNode"]]
 position = Vector2(18, -64)
@@ -63,3 +68,9 @@ shape = SubResource("RectangleShape2D_suw1q")
 [node name="Sprite2D" type="Sprite2D" parent="wall"]
 scale = Vector2(9.00391, 0.609375)
 texture = ExtResource("2_li3ps")
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+visible = false
+position = Vector2(6, 3)
+navigation_polygon = SubResource("NavigationPolygon_nwbml")
+metadata/_edit_lock_ = true

@@ -177,7 +177,7 @@ func SpawnGroundObj(Scene,Coords,GroundObj,Behaviour = GroundObj.Behaviour):
 		area.global_rotation = randf_range(-PI,PI)
 		area.add_child(shape)
 		area.add_child(sprt)
-		Scene.add_child.call_deferred(area)
+		Scene.add_child(area)
 
 func DeleteGun(creature,Deletegun):
 	var gun = creature.Gun
@@ -405,9 +405,9 @@ func Stepping(Creature): #used to detect if a Creature should do the stepping so
 	var LastFootstep = Creature.CreatureAppearance.LastStep
 	if LastFootstep[0].distance_to(Creature.Target.global_position)>50:
 		if LastFootstep[1]:
-			BaseClasses.PlaySound(self,Creature.CreatureAppearance.stepsfxS[0])
+			BaseClasses.PlaySound(Creature.Target,Creature.CreatureAppearance.stepsfxS[0])
 		else:
-			BaseClasses.PlaySound(self,Creature.CreatureAppearance.stepsfxS[1])
+			BaseClasses.PlaySound(Creature.Target,Creature.CreatureAppearance.stepsfxS[1])
 		LastFootstep[1] = !LastFootstep[1]
 		LastFootstep[0] = Creature.Target.global_position
 
@@ -656,7 +656,7 @@ func CreateBuyArea(scene,areaobject,size,coords):
 		shape.shape = rectangleshape
 		if areaobject.Sprite != null:
 			sprt.texture = load(areaobject.Sprite)
-			#sprt.scale = (size/(sprt.texture.get_size()))
+			sprt.scale = (size/(sprt.texture.get_size()))
 		area.set_script(load("res://Behaviours/BuyArea.gd"))
 		area.AreaObject = areaobject
 		area.global_position = coords
