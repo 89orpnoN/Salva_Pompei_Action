@@ -1,7 +1,0 @@
-[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://3mmvnq6pyhuv"]
-
-[ext_resource type="Texture2D" uid="uid://c3s7ul6uis0ip" path="res://Assets/SpriteSheets/buildings roofs other.png" id="1_74k0v"]
-
-[resource]
-atlas = ExtResource("1_74k0v")
-region = Rect2(7, 5, 325.455, 292.727)
